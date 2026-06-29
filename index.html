@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="pt-PT" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visiotech Calc</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<style>
+:root{--bg-base:#0d0f14;--bg-surface:#13161e;--bg-elevated:#1a1e2a;--bg-overlay:#212536;--border:rgba(255,255,255,.07);--border-active:rgba(99,102,241,.5);--accent:#6366f1;--accent-hover:#818cf8;--accent-muted:rgba(99,102,241,.15);--accent-glow:0 0 20px rgba(99,102,241,.3);--success:#22c55e;--success-muted:rgba(34,197,94,.12);--warning:#f59e0b;--warning-muted:rgba(245,158,11,.12);--danger:#ef4444;--danger-muted:rgba(239,68,68,.12);--info:#3b82f6;--info-muted:rgba(59,130,246,.12);--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#475569;--sidebar-width:260px;--navbar-height:64px;--radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-xl:20px;--shadow-sm:0 1px 3px rgba(0,0,0,.4);--shadow-md:0 4px 16px rgba(0,0,0,.4);--shadow-lg:0 8px 32px rgba(0,0,0,.5);--glass:rgba(255,255,255,.03);--glass-border:rgba(255,255,255,.06);--t-fast:150ms ease;--t-med:250ms ease;--t-slow:400ms ease}
+[data-theme="light"]{--bg-base:#f0f2f7;--bg-surface:#fff;--bg-elevated:#f8fafc;--bg-overlay:#eef1f8;--border:rgba(0,0,0,.08);--border-active:rgba(99,102,241,.4);--glass:rgba(255,255,255,.7);--glass-border:rgba(0,0,0,.06);--text-primary:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;--shadow-sm:0 1px 3px rgba(0,0,0,.1);--shadow-md:0 4px 16px rgba(0,0,0,.1);--shadow-lg:0 8px 32px rgba(0,0,0,.15)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg-base);color:var(--text-primary);line-height:1.6;min-height:100vh;transition:background var(--t-med),color var(--t-med);-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}img{max-width:100%;display:block}ul{list-style:none}input,select,textarea,button{font-family:inherit}button{cursor:pointer;border:none;background:none}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+.hidden{display:none!important}.flex{display:flex}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.justify-center{justify-content:center}
+.gap-1{gap:4px}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.w-full{width:100%}.text-center{text-align:center}.font-mono{font-family:'JetBrains Mono',monospace}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mb-16{margin-bottom:16px}
+/* LOGIN */
+#login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-base);position:relative;overflow:hidden}
+#login-page::before{content:'';position:absolute;top:-30%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,.12) 0%,transparent 70%);pointer-events:none}
+#login-page::after{content:'';position:absolute;bottom:-20%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(34,197,94,.06) 0%,transparent 70%);pointer-events:none}
+.login-card{width:100%;max-width:420px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:40px;box-shadow:var(--shadow-lg);position:relative;z-index:1;animation:fadeInUp .5s ease}
+.login-logo{text-align:center;margin-bottom:32px}
+.logo-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--accent),#818cf8);border-radius:var(--radius-md);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:var(--accent-glow)}
+.logo-icon i{font-size:22px;color:#fff}
+.login-logo h1{font-size:1.5rem;font-weight:700;color:var(--text-primary)}.login-logo p{font-size:.85rem;color:var(--text-secondary);margin-top:4px}
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:.8rem;font-weight:500;color:var(--text-secondary);margin-bottom:7px;letter-spacing:.03em}
+.form-input{width:100%;padding:11px 14px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:.9rem;transition:border-color var(--t-fast),box-shadow var(--t-fast);outline:none}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-muted)}.form-input::placeholder{color:var(--text-muted)}
+.input-wrapper{position:relative}.input-wrapper .form-input{padding-right:42px}
+.input-icon-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);cursor:pointer;transition:color var(--t-fast);background:none;border:none;padding:4px}
+.input-icon-btn:hover{color:var(--text-secondary)}
+.form-check{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.form-check input[type="checkbox"]{accent-color:var(--accent);cursor:pointer;width:15px;height:15px}
+.form-check label{font-size:.85rem;color:var(--text-secondary);cursor:pointer}
+.btn-primary-login{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;border:none;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;cursor:pointer;transition:all var(--t-fast);box-shadow:0 4px 14px rgba(99,102,241,.4);letter-spacing:.02em}
+.btn-primary-login:hover{opacity:.92;transform:translateY(-1px)}.btn-primary-login:active{transform:translateY(0)}
+.btn-link{background:none;border:none;color:var(--accent);cursor:pointer;font-size:.85rem;padding:0;transition:color var(--t-fast)}.btn-link:hover{color:var(--accent-hover)}
+.login-footer{text-align:center;margin-top:20px}
+.login-theme-toggle{position:absolute;top:20px;right:20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);transition:all var(--t-fast);z-index:10}
+.login-theme-toggle:hover{background:var(--bg-overlay);color:var(--text-primary)}
+.login-error{background:var(--danger-muted);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-sm);color:var(--danger);padding:10px 14px;font-size:.85rem;margin-bottom:16px;display:none;gap:8px;align-items:center}
+/* APP */
+#app-page{display:none;min-height:100vh}
+.app-layout{display:flex;min-height:100vh}
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-width);background:var(--bg-surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:200;transition:width var(--t-med),transform var(--t-med);overflow:hidden}
+.sidebar.collapsed{width:64px}
+.sidebar-header{height:var(--navbar-height);display:flex;align-items:center;padding:0 16px;border-bottom:1px solid var(--border);gap:10px;flex-shrink:0}
+.sidebar-logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),#818cf8);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(99,102,241,.35)}
+.sidebar-logo-icon i{font-size:15px;color:#fff}
+.sidebar-logo-text{font-size:.95rem;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;transition:opacity var(--t-med),max-width var(--t-med);max-width:180px}
+.sidebar.collapsed .sidebar-logo-text{opacity:0;max-width:0}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 8px}
+.nav-section-title{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding:8px 10px 4px;white-space:nowrap;overflow:hidden;transition:opacity var(--t-med)}
+.sidebar.collapsed .nav-section-title{opacity:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);color:var(--text-secondary);cursor:pointer;transition:background var(--t-fast),color var(--t-fast);position:relative;margin-bottom:2px;white-space:nowrap}
+.nav-item:hover{background:var(--bg-elevated);color:var(--text-primary)}
+.nav-item.active{background:var(--accent-muted);color:var(--accent)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--accent);border-radius:0 3px 3px 0}
+.nav-item i{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-item-label{font-size:.875rem;font-weight:500;overflow:hidden;transition:opacity var(--t-med),max-width var(--t-med);max-width:200px}
+.sidebar.collapsed .nav-item-label{opacity:0;max-width:0}
+.sidebar-tooltip{position:absolute;left:72px;background:var(--bg-overlay);border:1px solid var(--border);color:var(--text-primary);padding:5px 10px;border-radius:var(--radius-sm);font-size:.8rem;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity var(--t-fast);z-index:300;box-shadow:var(--shadow-md)}
+.sidebar.collapsed .nav-item:hover .sidebar-tooltip{opacity:1}
+.sidebar-footer{padding:12px 8px;border-top:1px solid var(--border);flex-shrink:0}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background var(--t-fast)}
+.sidebar-user:hover{background:var(--bg-elevated)}
+.sidebar-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#818cf8);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0}
+.sidebar-user-info{overflow:hidden;transition:opacity var(--t-med),max-width var(--t-med);max-width:160px}
+.sidebar.collapsed .sidebar-user-info{opacity:0;max-width:0}
+.sidebar-user-name{font-size:.85rem;font-weight:600;color:var(--text-primary)}.sidebar-user-role{font-size:.72rem;color:var(--text-muted);margin-top:1px}
+/* NAVBAR */
+.main-wrapper{flex:1;margin-left:var(--sidebar-width);transition:margin-left var(--t-med);min-width:0}
+.sidebar.collapsed~.main-wrapper{margin-left:64px}
+.navbar{height:var(--navbar-height);background:var(--bg-surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:100;gap:16px}
+.navbar-toggle{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);transition:all var(--t-fast)}
+.navbar-toggle:hover{background:var(--bg-elevated);color:var(--text-primary)}
+.navbar-breadcrumb{font-size:.875rem;color:var(--text-secondary);flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.navbar-breadcrumb span{color:var(--text-primary);font-weight:500}
+.navbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.navbar-btn{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);transition:all var(--t-fast)}
+.navbar-btn:hover{background:var(--bg-elevated);color:var(--text-primary)}
+.navbar-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#818cf8);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;cursor:pointer;transition:opacity var(--t-fast)}
+.navbar-avatar:hover{opacity:.85}
+.navbar-user-name{font-size:.85rem;font-weight:500;color:var(--text-primary);cursor:pointer;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* CONTENT */
+.main-content{padding:28px 24px;min-height:calc(100vh - var(--navbar-height))}
+.page-header{margin-bottom:24px}.page-title{font-size:1.4rem;font-weight:700;color:var(--text-primary);letter-spacing:-.02em}.page-subtitle{font-size:.85rem;color:var(--text-secondary);margin-top:4px}
+.page-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:500;cursor:pointer;transition:all var(--t-fast);border:1px solid transparent;white-space:nowrap}
+.btn i{font-size:13px}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;box-shadow:0 2px 10px rgba(99,102,241,.35)}
+.btn-accent:hover{opacity:.88;transform:translateY(-1px)}
+.btn-secondary{background:var(--bg-elevated);color:var(--text-primary);border-color:var(--border)}.btn-secondary:hover{background:var(--bg-overlay)}
+.btn-success{background:var(--success-muted);color:var(--success);border-color:rgba(34,197,94,.2)}.btn-success:hover{background:rgba(34,197,94,.2)}
+.btn-danger{background:var(--danger-muted);color:var(--danger);border-color:rgba(239,68,68,.2)}.btn-danger:hover{background:rgba(239,68,68,.2)}
+.btn-warning{background:var(--warning-muted);color:var(--warning);border-color:rgba(245,158,11,.2)}.btn-warning:hover{background:rgba(245,158,11,.2)}
+.btn-sm{padding:5px 10px;font-size:.78rem}.btn-xs{padding:3px 8px;font-size:.73rem}.btn-lg{padding:12px 24px;font-size:.95rem}
+/* CARDS */
+.card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);transition:box-shadow var(--t-med)}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:.95rem;font-weight:600;color:var(--text-primary)}
+.stat-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;align-items:center;gap:16px;transition:all var(--t-med)}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.stat-icon{width:48px;height:48px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px}
+.stat-icon.accent{background:var(--accent-muted);color:var(--accent)}.stat-icon.success{background:var(--success-muted);color:var(--success)}.stat-icon.warning{background:var(--warning-muted);color:var(--warning)}.stat-icon.info{background:var(--info-muted);color:var(--info)}.stat-icon.danger{background:var(--danger-muted);color:var(--danger)}
+.stat-value{font-size:1.6rem;font-weight:700;color:var(--text-primary);letter-spacing:-.02em;line-height:1.2}.stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:3px}
+/* GRID */
+.grid{display:grid;gap:16px}.grid-2{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-4{grid-template-columns:repeat(4,1fr)}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;letter-spacing:.02em}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge-success{background:var(--success-muted);color:var(--success)}.badge-danger{background:var(--danger-muted);color:var(--danger)}.badge-warning{background:var(--warning-muted);color:var(--warning)}.badge-info{background:var(--info-muted);color:var(--info)}.badge-accent{background:var(--accent-muted);color:var(--accent)}.badge-muted{background:var(--bg-elevated);color:var(--text-muted)}
+/* TABLES */
+.table-wrapper{overflow-x:auto;border-radius:var(--radius-md)}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{background:var(--bg-elevated);color:var(--text-muted);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table td{padding:13px 14px;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text-secondary);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}.data-table tr:hover td{background:var(--bg-elevated)}
+.data-table .col-name{color:var(--text-primary);font-weight:500}.data-table .col-ref{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent)}
+.dataTables_wrapper{color:var(--text-primary);font-size:.85rem}
+.dataTables_length,.dataTables_filter{margin-bottom:14px}
+.dataTables_length label,.dataTables_filter label{color:var(--text-secondary)}
+.dataTables_length select,.dataTables_filter input{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);padding:5px 10px;outline:none;margin:0 4px}
+.dataTables_filter input:focus{border-color:var(--accent)}.dataTables_info{color:var(--text-muted);font-size:.8rem}
+.dataTables_paginate .paginate_button{background:var(--bg-elevated)!important;border:1px solid var(--border)!important;color:var(--text-secondary)!important;border-radius:var(--radius-sm)!important;padding:4px 10px!important;margin:0 2px!important;cursor:pointer!important}
+.dataTables_paginate .paginate_button:hover{background:var(--bg-overlay)!important;color:var(--text-primary)!important}
+.dataTables_paginate .paginate_button.current{background:var(--accent-muted)!important;border-color:var(--border-active)!important;color:var(--accent)!important}
+.dt-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.dt-buttons .btn{padding:5px 10px!important;font-size:.78rem!important}
+div.dt-buttons{margin-bottom:0}
+.dataTables_paginate .paginate_button.disabled{opacity:.4!important}
+table.dataTable thead th{background:var(--bg-elevated)!important;color:var(--text-muted)!important;font-size:.72rem!important;text-transform:uppercase!important;letter-spacing:.05em!important;border-bottom:1px solid var(--border)!important}
+table.dataTable tbody td{border-bottom:1px solid var(--border)!important;color:var(--text-secondary)!important}
+table.dataTable tbody tr:hover td{background:var(--bg-elevated)!important}
+table.dataTable{color:var(--text-primary)!important}
+/* FORMS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form-field{margin-bottom:16px}
+.form-field label{display:block;font-size:.8rem;font-weight:500;color:var(--text-secondary);margin-bottom:6px}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:10px 13px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:.875rem;transition:border-color var(--t-fast),box-shadow var(--t-fast);outline:none}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-muted)}
+.form-field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.form-field textarea{resize:vertical;min-height:80px}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+.modal{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-xl);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:slideUp .25s ease}
+.modal.modal-lg{max-width:720px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:1rem;font-weight:600;color:var(--text-primary)}
+.modal-close{width:30px;height:30px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all var(--t-fast)}
+.modal-close:hover{background:var(--bg-elevated);color:var(--text-primary)}
+.modal-body{padding:20px 24px}.modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px 20px;border-top:1px solid var(--border)}
+/* WIZARD */
+#wizard-overlay{position:fixed;inset:0;background:var(--bg-base);z-index:500;display:none;flex-direction:column;overflow-y:auto}
+#wizard-overlay.active{display:flex}
+.wizard-topbar{background:var(--bg-surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:10}
+.wizard-topbar-title{font-size:1rem;font-weight:600;color:var(--text-primary)}
+.wizard-close-btn{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);transition:all var(--t-fast)}
+.wizard-close-btn:hover{background:var(--bg-elevated);color:var(--text-primary)}
+.wizard-progress-bar-wrap{background:var(--bg-surface);border-bottom:1px solid var(--border);padding:16px 32px 20px;flex-shrink:0}
+.wizard-steps-labels{display:flex;gap:0;margin-bottom:10px;overflow-x:auto}
+.wizard-step-label{flex:1;text-align:center;font-size:.7rem;font-weight:500;color:var(--text-muted);padding:0 4px;white-space:nowrap;transition:color var(--t-med);min-width:60px}
+.wizard-step-label.active{color:var(--accent)}.wizard-step-label.done{color:var(--success)}
+.wizard-progress-track{height:4px;background:var(--bg-overlay);border-radius:10px;overflow:hidden}
+.wizard-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#818cf8);border-radius:10px;transition:width var(--t-slow)}
+.wizard-step-indicators{display:flex;justify-content:space-between;margin-top:8px}
+.wizard-step-dot{width:8px;height:8px;border-radius:50%;background:var(--bg-overlay);transition:all var(--t-med)}
+.wizard-step-dot.active{background:var(--accent);box-shadow:0 0 8px rgba(99,102,241,.5)}.wizard-step-dot.done{background:var(--success)}
+.wizard-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+.wizard-step-content{width:100%;max-width:680px}
+.wizard-step-title{font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:8px;letter-spacing:-.02em}
+.wizard-step-desc{font-size:.9rem;color:var(--text-secondary);margin-bottom:32px;line-height:1.6}
+.wizard-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);gap:12px}
+.wizard-step-counter{font-size:.8rem;color:var(--text-muted);font-weight:500}
+.wizard-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.wizard-choice-card{border:2px solid var(--border);border-radius:var(--radius-lg);padding:28px 20px;text-align:center;cursor:pointer;transition:all var(--t-med);background:var(--bg-surface)}
+.wizard-choice-card:hover{border-color:var(--accent);background:var(--accent-muted);transform:translateY(-2px)}
+.wizard-choice-card.selected{border-color:var(--accent);background:var(--accent-muted);box-shadow:0 0 0 1px var(--accent)}
+.wizard-choice-card i{font-size:32px;color:var(--accent);margin-bottom:12px;display:block}
+.wizard-choice-card h3{font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:6px}
+.wizard-choice-card p{font-size:.82rem;color:var(--text-secondary)}
+.wizard-number-input{display:flex;align-items:center;gap:16px;margin-top:8px}
+.number-btn{width:44px;height:44px;border-radius:var(--radius-md);background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-primary);font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--t-fast);flex-shrink:0}
+.number-btn:hover{background:var(--bg-overlay);border-color:var(--accent)}
+.number-display{font-size:3rem;font-weight:700;color:var(--text-primary);min-width:80px;text-align:center;letter-spacing:-.03em;font-family:'JetBrains Mono',monospace;transition:transform .15s}
+.product-select-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.product-select-card{border:2px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all var(--t-med);background:var(--bg-surface)}
+.product-select-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.product-select-card.selected{border-color:var(--accent);background:var(--accent-muted)}
+.product-select-card img{width:100%;height:110px;object-fit:contain;margin-bottom:12px;background:var(--bg-elevated);border-radius:var(--radius-sm);padding:8px}
+.psc-ref{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent);margin-bottom:4px}
+.psc-name{font-size:.82rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;line-height:1.3}
+.psc-price{font-size:1rem;font-weight:700;color:var(--text-primary)}
+.psc-selected-badge{display:none;margin-top:8px;text-align:center}
+.product-select-card.selected .psc-selected-badge{display:block}
+.module-qty-card{display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;background:var(--bg-surface);margin-bottom:10px;transition:border-color var(--t-fast)}
+.module-qty-card:hover{border-color:var(--border-active)}
+.module-qty-card img{width:56px;height:56px;object-fit:contain;background:var(--bg-elevated);border-radius:var(--radius-sm);padding:4px;flex-shrink:0}
+.module-qty-info{flex:1;min-width:0}
+.module-qty-ref{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent)}
+.module-qty-name{font-size:.85rem;font-weight:600;color:var(--text-primary);margin:3px 0}
+.module-qty-price{font-size:.82rem;color:var(--text-secondary)}
+.module-qty-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.qty-btn{width:28px;height:28px;border-radius:50%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-primary);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--t-fast)}
+.qty-btn:hover{background:var(--accent-muted);border-color:var(--accent);color:var(--accent)}
+.qty-value{font-size:1rem;font-weight:700;min-width:24px;text-align:center;color:var(--text-primary);font-family:'JetBrains Mono',monospace}
+.auto-item-row{display:flex;align-items:center;gap:12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;margin-bottom:8px}
+.auto-item-row img{width:44px;height:44px;object-fit:contain;background:var(--bg-surface);border-radius:var(--radius-sm);padding:4px;flex-shrink:0}
+.auto-badge{font-size:.68rem;color:var(--warning);background:var(--warning-muted);padding:2px 7px;border-radius:20px;font-weight:600;margin-left:auto;flex-shrink:0}
+.summary-table{width:100%;border-collapse:collapse}
+.summary-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);padding:8px 12px;border-bottom:1px solid var(--border);text-align:left}
+.summary-table td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text-secondary);vertical-align:middle}
+.summary-table tr:last-child td{border-bottom:none}.summary-table td:last-child{text-align:right;font-family:'JetBrains Mono',monospace}
+.summary-table img{width:40px;height:40px;object-fit:contain;background:var(--bg-elevated);border-radius:var(--radius-sm);padding:3px}
+.summary-totals{margin-top:16px;padding:16px;background:var(--bg-elevated);border-radius:var(--radius-md);border:1px solid var(--border)}
+.summary-totals-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:.85rem}
+.summary-totals-row.total{font-size:1rem;font-weight:700;color:var(--text-primary);border-top:1px solid var(--border);margin-top:8px;padding-top:12px}
+.summary-totals-row.iva{color:var(--text-secondary)}.summary-totals-row .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+/* PRODUCTS */
+.product-catalog-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all var(--t-med)}
+.product-catalog-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--border-active)}
+.product-catalog-card:hover .pc-ref::after{content:' — clique para detalhes';color:var(--text-muted);font-size:.68rem;font-family:'Inter',sans-serif}
+.pc-img{height:140px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;padding:12px}
+.pc-img img{max-height:110px;object-fit:contain}
+.pc-body{padding:14px}.pc-ref{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent);margin-bottom:4px}.pc-name{font-size:.85rem;font-weight:600;color:var(--text-primary);margin-bottom:6px;line-height:1.3}.pc-cat{font-size:.72rem;color:var(--text-muted);margin-bottom:10px}.pc-prices{display:flex;gap:12px;align-items:baseline}.pc-pvp{font-size:1rem;font-weight:700;color:var(--text-primary)}.pc-pvi{font-size:.8rem;color:var(--text-muted)}
+/* USER */
+.user-list-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);transition:background var(--t-fast)}
+.user-list-item:last-child{border-bottom:none}.user-list-item:hover{background:var(--bg-elevated)}
+.user-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.user-avatar.av-purple{background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff}.user-avatar.av-green{background:linear-gradient(135deg,#22c55e,#4ade80);color:#fff}.user-avatar.av-blue{background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff}.user-avatar.av-orange{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
+.user-info{flex:1;min-width:0}.user-name{font-size:.88rem;font-weight:600;color:var(--text-primary)}.user-meta{font-size:.77rem;color:var(--text-muted);margin-top:2px}
+/* ALERTS */
+.alert{padding:12px 16px;border-radius:var(--radius-md);font-size:.85rem;border:1px solid;display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.alert i{margin-top:1px;flex-shrink:0}
+.alert-info{background:var(--info-muted);border-color:rgba(59,130,246,.2);color:var(--info)}.alert-success{background:var(--success-muted);border-color:rgba(34,197,94,.2);color:var(--success)}.alert-warning{background:var(--warning-muted);border-color:rgba(245,158,11,.2);color:var(--warning)}.alert-danger{background:var(--danger-muted);border-color:rgba(239,68,68,.2);color:var(--danger)}
+/* BUDGET */
+.budget-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;display:flex;align-items:center;gap:14px;background:var(--bg-surface);transition:all var(--t-fast);margin-bottom:8px}
+.budget-card:hover{border-color:var(--border-active);box-shadow:var(--shadow-sm)}
+.budget-icon{width:42px;height:42px;border-radius:var(--radius-sm);background:var(--accent-muted);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0}
+.budget-info{flex:1;min-width:0}.budget-id{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent)}.budget-client{font-size:.9rem;font-weight:600;color:var(--text-primary);margin:2px 0}.budget-meta{font-size:.77rem;color:var(--text-muted)}.budget-value{text-align:right;flex-shrink:0}.budget-amount{font-size:1rem;font-weight:700;color:var(--text-primary);font-family:'JetBrains Mono',monospace}
+/* ACTIVITY */
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}.activity-content{flex:1;min-width:0}.activity-text{font-size:.85rem;color:var(--text-primary);line-height:1.4}.activity-time{font-size:.75rem;color:var(--text-muted);margin-top:3px}
+/* FILTER */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.filter-chip{padding:5px 12px;border-radius:20px;font-size:.78rem;font-weight:500;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-secondary);cursor:pointer;transition:all var(--t-fast)}
+.filter-chip:hover{border-color:var(--accent);color:var(--text-primary)}.filter-chip.active{border-color:var(--accent);background:var(--accent-muted);color:var(--accent)}
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;transition:all var(--t-fast)}
+.search-bar:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-muted)}.search-bar i{color:var(--text-muted);font-size:13px}
+.search-bar input{background:none;border:none;outline:none;color:var(--text-primary);font-size:.875rem;flex:1}.search-bar input::placeholder{color:var(--text-muted)}
+/* TOASTS */
+#toast-container{position:fixed;top:80px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);font-size:.85rem;color:var(--text-primary);max-width:320px;animation:slideInRight .3s ease;pointer-events:auto;border-left:3px solid var(--accent)}
+.toast.success{border-left-color:var(--success)}.toast.error{border-left-color:var(--danger)}.toast.warning{border-left-color:var(--warning)}
+.toast i{flex-shrink:0;font-size:15px}.toast.success i{color:var(--success)}.toast.error i{color:var(--danger)}.toast.warning i{color:var(--warning)}.toast.info i{color:var(--info)}
+/* MISC */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}.empty-state i{font-size:48px;margin-bottom:16px;opacity:.3;display:block}.empty-state h3{font-size:1rem;font-weight:600;color:var(--text-secondary);margin-bottom:8px}.empty-state p{font-size:.85rem}
+.loading-dots{display:inline-flex;gap:4px}.loading-dots span{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease infinite}.loading-dots span:nth-child(2){animation-delay:.2s}.loading-dots span:nth-child(3){animation-delay:.4s}
+.divider{height:1px;background:var(--border);margin:20px 0}
+.chart-container{position:relative}.chart-container canvas{max-height:280px}
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.fade-in{animation:fadeIn .3s ease}
+/* RESPONSIVE */
+@media(max-width:1024px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){:root{--sidebar-width:240px}.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-wrapper{margin-left:0!important}.grid-2,.grid-4,.grid-3{grid-template-columns:1fr}.main-content{padding:20px 16px}.form-row{grid-template-columns:1fr}.wizard-choice-grid{grid-template-columns:1fr}.product-select-grid{grid-template-columns:repeat(2,1fr)}.navbar-user-name{display:none}}
+@media(max-width:480px){.product-select-grid{grid-template-columns:1fr}.wizard-body{padding:24px 16px}}
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
+#sidebar-overlay.active{display:block}
+</style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div id="sidebar-overlay" onclick="App.closeMobileSidebar()"></div>
+
+<!-- WIZARD OVERLAY -->
+<div id="wizard-overlay">
+  <div class="wizard-topbar">
+    <div class="flex items-center gap-3">
+      <div class="sidebar-logo-icon"><i class="fas fa-calculator"></i></div>
+      <span class="wizard-topbar-title">Novo Orçamento — Visiotech Calc</span>
+    </div>
+    <button class="wizard-close-btn" onclick="Wizard.close()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="wizard-progress-bar-wrap">
+    <div class="wizard-steps-labels" id="wizardStepLabels"></div>
+    <div class="wizard-progress-track"><div class="wizard-progress-fill" id="wizardProgressFill"></div></div>
+    <div class="wizard-step-indicators" id="wizardDots"></div>
+  </div>
+  <div class="wizard-body">
+    <div class="wizard-step-content" id="wizardStepContent"></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-page">
+  <button class="login-theme-toggle" onclick="App.toggleTheme()"><i class="fas fa-moon" id="themeIconLogin"></i></button>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon"><i class="fas fa-calculator"></i></div>
+      <h1>Visiotech Calc</h1>
+      <p>Sistema de Orçamentos Profissional</p>
+    </div>
+    <div style="background:var(--accent-muted);border:1px solid var(--border-active);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:18px;font-size:.78rem;color:var(--text-secondary);line-height:1.7">
+      <strong style="color:var(--accent)">Contas demo:</strong><br>
+      <span style="font-family:'JetBrains Mono',monospace">superadmin@visiotech.pt</span> / <span style="font-family:'JetBrains Mono',monospace">admin123</span><br>
+      <span style="font-family:'JetBrains Mono',monospace">ana@solucoes.pt</span> / <span style="font-family:'JetBrains Mono',monospace">admin123</span><br>
+      <span style="font-family:'JetBrains Mono',monospace">joao@solucoes.pt</span> / <span style="font-family:'JetBrains Mono',monospace">user123</span>
+    </div>
+    <div class="login-error" id="loginError"><i class="fas fa-circle-exclamation"></i><span id="loginErrorMsg"></span></div>
+    <div class="form-group">
+      <label class="form-label">Endereço de Email</label>
+      <input type="email" class="form-input" id="loginEmail" placeholder="utilizador@empresa.pt" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-wrapper">
+        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+        <button class="input-icon-btn" onclick="Auth.togglePass()" tabindex="-1"><i class="fas fa-eye" id="passIcon"></i></button>
+      </div>
+    </div>
+    <div class="form-check">
+      <input type="checkbox" id="rememberMe">
+      <label for="rememberMe">Manter sessão ativa</label>
+    </div>
+    <button class="btn-primary-login" onclick="Auth.login()">Entrar</button>
+    <div class="login-footer">
+      <button class="btn-link" onclick="Auth.forgotPassword()">Esqueci a password</button>
+      <span style="color:var(--text-muted);margin:0 8px">&#183;</span>
+      <button class="btn-link" style="color:var(--text-muted);font-size:.78rem" onclick="Auth.resetData()">Repor dados demo</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-page">
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon"><i class="fas fa-calculator"></i></div>
+        <span class="sidebar-logo-text">Visiotech Calc</span>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="Pages.openProfileModal()">
+          <div class="sidebar-avatar" id="sidebarAvatar"></div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUserName">–</div>
+            <div class="sidebar-user-role" id="sidebarUserRole">–</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="main-wrapper" id="mainWrapper">
+      <header class="navbar">
+        <button class="navbar-toggle" onclick="App.toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="navbar-breadcrumb">Visiotech Calc / <span id="navPageTitle">Dashboard</span></div>
+        <div class="navbar-actions">
+          <button class="navbar-btn" onclick="App.toggleTheme()"><i class="fas fa-moon" id="themeIconApp"></i></button>
+          <div class="navbar-btn" onclick="Pages.showNotifications()" title="Notificações" style="position:relative" id="bellBtn"><i class="fas fa-bell"></i><span id="bellDot" style="display:none;position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:2px solid var(--bg-surface)"></span></div>
+          <div class="navbar-avatar" id="navbarAvatar" onclick="Pages.openProfileModal()"></div>
+          <span class="navbar-user-name" id="navbarUserName" onclick="Pages.openProfileModal()"></span>
+          <button class="navbar-btn" onclick="Auth.logout()" title="Sair"><i class="fas fa-right-from-bracket"></i></button>
+        </div>
+      </header>
+      <main class="main-content" id="mainContent">
+        <div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div></div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script>
+'use strict';
+/* === UTILS === */
+const Utils={
+  uuid(){return'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16)})},
+  formatCurrency(v){return new Intl.NumberFormat('pt-PT',{style:'currency',currency:'EUR'}).format(v||0)},
+  formatDate(iso){if(!iso)return'–';return new Date(iso).toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'})},
+  formatDateTime(iso){if(!iso)return'–';return new Date(iso).toLocaleString('pt-PT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})},
+  timeAgo(iso){if(!iso)return'–';const d=Date.now()-new Date(iso).getTime(),m=Math.floor(d/60000);if(m<1)return'agora mesmo';if(m<60)return`há ${m}min`;const h=Math.floor(m/60);if(h<24)return`há ${h}h`;return`há ${Math.floor(h/24)}d`},
+  initials(n){if(!n)return'?';return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()},
+  avatarColor(n){const c=['av-purple','av-green','av-blue','av-orange'];let h=0;for(const ch of(n||''))h+=ch.charCodeAt(0);return c[h%c.length]},
+  deepClone(o){return JSON.parse(JSON.stringify(o))},
+  sanitize(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+};
+/* === STORAGE === */
+const Storage={
+  get(k,fb=null){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb}catch{return fb}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}},
+  remove(k){localStorage.removeItem(k)},
+  push(k,item,fb=[]){const a=this.get(k,fb);a.push(item);return this.set(k,a)},
+  update(k,id,data){const a=this.get(k,[]);const i=a.findIndex(x=>x.id===id);if(i>=0){a[i]={...a[i],...data};this.set(k,a);return a[i]}return null},
+  delete(k,id){const a=this.get(k,[]).filter(x=>x.id!==id);this.set(k,a);return a}
+};
+/* === TOAST === */
+const Toast={
+  show(msg,type='info',dur=3500){
+    const icons={success:'fa-circle-check',error:'fa-circle-xmark',warning:'fa-triangle-exclamation',info:'fa-circle-info'};
+    const el=document.createElement('div');el.className=`toast ${type}`;
+    el.innerHTML=`<i class="fas ${icons[type]||icons.info}"></i><span>${Utils.sanitize(msg)}</span>`;
+    document.getElementById('toast-container').appendChild(el);
+    setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(20px)';el.style.transition='all .3s';setTimeout(()=>el.remove(),300)},dur);
+  },
+  success(m){this.show(m,'success')},error(m){this.show(m,'error')},warning(m){this.show(m,'warning')},info(m){this.show(m,'info')}
+};
+/* === PRODUCTS CATALOG === */
+const Products={
+  catalog:[
+    {id:'p01',ref:'DS-KD-INFO',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Placa de directório. Retroiluminado. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-INFO/DS-KD-INFO.png',pvp:56,pvi:24,notes:''},
+    {id:'p02',ref:'DS-KD-M',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Abertura cartão MF 13.56 MHz. LED estado. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-M/DS-KD-M.png',pvp:86,pvi:37,notes:''},
+    {id:'p03',ref:'DS-KD-E',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Abertura cartão EM 125 kHz. LED estado. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-E/DS-KD-E.png',pvp:86,pvi:37,notes:''},
+    {id:'p04',ref:'DS-KD-TDM',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Ecrã táctil IPS 4". Abertura cartão MF e PIN. 500 contactos. IP65|IK08.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-TDM/DS-KD-TDM.png',pvp:296,pvi:127,notes:''},
+    {id:'p05',ref:'DS-KD-KK',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Botoneira 6 botões com LEDs. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-KK/DS-KD-KK.png',pvp:64,pvi:28,notes:''},
+    {id:'p06',ref:'DS-KD-BK',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Embelezador/preenchimento de espaços. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-BK/DS-KD-BK.png',pvp:32,pvi:14,notes:''},
+    {id:'p07',ref:'DS-KD-KP',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Abertura com código PIN. Iluminação LED. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-KP/DS-KD-KP.png',pvp:140,pvi:60,notes:''},
+    {id:'p08',ref:'DS-KD-TDE',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Ecrã táctil IPS 4". Abertura cartão EM e PIN. 500 contactos. IP65|IK08.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-TDE/DS-KD-TDE.png',pvp:296,pvi:127,notes:''},
+    {id:'p09',ref:'DS-KD-IN',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Indicador estado abertura, chamada e áudio. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-IN/DS-KD-IN.png',pvp:54,pvi:23,notes:''},
+    {id:'p10',ref:'DS-KD-KK/S',brand:'HIKVISION',category:'modulo',description:'Módulo extensão aço inox. Botoneira 6 botões com LEDs. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-KK_S/DS-KD-KK_S.png',pvp:82,pvi:35,notes:'Aço inox'},
+    {id:'p11',ref:'DS-KD-KP/S',brand:'HIKVISION',category:'modulo',description:'Módulo extensão aço inox. Abertura PIN. Iluminação LED. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-KP_S/DS-KD-KP_S.png',pvp:162,pvi:69,notes:'Aço inox'},
+    {id:'p12',ref:'DS-KD-K12',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Botoneira 12 botões com LEDs. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-K12/DS-KD-K12.png',pvp:88,pvi:37,notes:''},
+    {id:'p13',ref:'DS-KD-K12/S',brand:'HIKVISION',category:'modulo',description:'Módulo extensão aço inox. Botoneira 12 botões. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-K12_S/DS-KD-K12_S.png',pvp:106,pvi:45,notes:'Aço inox'},
+    {id:'p14',ref:'DS-KD-MFB',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Abertura cartão MF e impressão digital. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-MFB/DS-KD-MFB.png',pvp:156,pvi:67,notes:''},
+    {id:'p15',ref:'DS-KD-MFB/S',brand:'HIKVISION',category:'modulo',description:'Módulo extensão aço inox. Abertura cartão MF e impressão digital. IP65.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-MFB_S/DS-KD-MFB_S.png',pvp:162,pvi:70,notes:'Aço inox'},
+    {id:'p16',ref:'DS-KD-PMR',brand:'HIKVISION',category:'modulo',description:'Módulo extensão. Indicador estado abertura, chamada e áudio BIM. IP65.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-PMR/DS-KD-PMR.png',pvp:222,pvi:95,notes:'BIM'},
+    {id:'p17',ref:'DS-KH7000EY-E2',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Áudio bidirecional. 2 Linhas HD. Montagem superfície.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7000EY-E2/DS-KH7000EY-E2.png',pvp:72,pvi:32,notes:''},
+    {id:'p18',ref:'DS-KH7000EY-E2/White',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Áudio bidirecional. 2 Linhas HD. Montagem superfície. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7000EY-E2_White/DS-KH7000EY-E2_White.png',pvp:72,pvi:32,notes:'Branco'},
+    {id:'p19',ref:'DS-KH7100EY-E2',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Visor TFT 4.3". Áudio bidirecional. 2 Linhas HD. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7100EY-E2/DS-KH7100EY-E2.png',pvp:116,pvi:52,notes:''},
+    {id:'p20',ref:'DS-KH7100EY-E2/White',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Visor TFT 4.3". Áudio bidirecional. 2 Linhas HD. microSD 128GB. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7100EY-E2_White/DS-KH7100EY-E2_White.png',pvp:116,pvi:52,notes:'Branco'},
+    {id:'p21',ref:'DS-KH7300EY-TE2',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Visor TFT 7". Áudio bidirecional. 2 Linhas HD. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-TE2/DS-KH7300EY-TE2.png',pvp:159.12,pvi:67,notes:''},
+    {id:'p22',ref:'DS-KH7300EY-TE2/White',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Visor TFT 7". Áudio bidirecional. 2 Linhas HD. microSD 128GB. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-TE2_White/DS-KH7300EY-TE2_White.png',pvp:159.12,pvi:67,notes:'Branco'},
+    {id:'p23',ref:'DS-KH7300EY-THE2',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Visor TFT 7". 2 Fios HD. Auricular de mão. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-THE2/DS-KH7300EY-THE2.png',pvp:166,pvi:75,notes:'Com auricular'},
+    {id:'p24',ref:'DS-KH7300EY-THE2/White',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Visor TFT 7". 2 Fios HD. Auricular de mão. microSD 128GB. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-THE2_White/DS-KH7300EY-THE2_White.png',pvp:166,pvi:75,notes:'Branco + auricular'},
+    {id:'p25',ref:'DS-KH7300EY-TIE2',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Visor TFT 7". Áudio bidirecional e BIM. 2 Linhas HD. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-TIE2/DS-KH7300EY-TIE2.png',pvp:166,pvi:75,notes:'BIM'},
+    {id:'p26',ref:'DS-KH7300EY-TIE2/White',brand:'HIKVISION INTERCOM',category:'monitor',description:'Monitor videoporteiro. Visor TFT 7". Áudio bidirecional e BIM. 2 Linhas HD. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-TIE2_White/DS-KH7300EY-TIE2_White.png',pvp:166,pvi:75,notes:'Branco + BIM'},
+    {id:'p27',ref:'DS-KH7100EY-WE2',brand:'HIKVISION INTERCOM',category:'monitor_wifi',description:'Monitor videoporteiro. Visor TFT 4.3". 2 fios HD + WiFi. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7100EY-WE2/DS-KH7100EY-WE2.png',pvp:150,pvi:68,notes:'Wi-Fi'},
+    {id:'p28',ref:'DS-KH7100EY-WE2/White',brand:'HIKVISION INTERCOM',category:'monitor_wifi',description:'Monitor videoporteiro. Visor TFT 4.3". 2 fios HD + WiFi. microSD 128GB. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7100EY-WE2_White/DS-KH7100EY-WE2_White.png',pvp:150,pvi:68,notes:'Wi-Fi + Branco'},
+    {id:'p29',ref:'DS-KH7300EY-WTE2',brand:'HIKVISION INTERCOM',category:'monitor_wifi',description:'Monitor videoporteiro. Visor TFT 7". 2 fios HD + WiFi. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-WTE2/DS-KH7300EY-WTE2.png',pvp:205.6,pvi:87,notes:'Wi-Fi'},
+    {id:'p30',ref:'DS-KH7300EY-WTE2/White',brand:'HIKVISION INTERCOM',category:'monitor_wifi',description:'Monitor videoporteiro. Visor TFT 7". 2 fios HD + WiFi. microSD 128GB. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-WTE2_White/DS-KH7300EY-WTE2_White.png',pvp:205.6,pvi:87,notes:'Wi-Fi + Branco'},
+    {id:'p31',ref:'DS-KH7300EY-WTHE2',brand:'HIKVISION INTERCOM',category:'monitor_wifi',description:'Monitor videoporteiro. Visor TFT 7". 2 Fios HD + Wi-Fi. Auricular de mão. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-WTHE2/DS-KH7300EY-WTHE2.png',pvp:210,pvi:95,notes:'Wi-Fi + auricular'},
+    {id:'p32',ref:'DS-KH7300EY-WTHE2/White',brand:'HIKVISION INTERCOM',category:'monitor_wifi',description:'Monitor videoporteiro. Visor TFT 7". 2 Fios HD + Wi-Fi. Auricular de mão. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-WTHE2_White/DS-KH7300EY-WTHE2_White.png',pvp:210,pvi:95,notes:'Wi-Fi + auricular + Branco'},
+    {id:'p33',ref:'DS-KH7300EY-WTIE2/White',brand:'HIKVISION INTERCOM',category:'monitor_wifi',description:'Monitor videoporteiro. Visor TFT 7". BIM. 2 fios HD + WiFi. Branco.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-WTIE2_White/DS-KH7300EY-WTIE2_White.png',pvp:210,pvi:95,notes:'Wi-Fi + BIM'},
+    {id:'p34',ref:'DS-KD7003EY-IME2',brand:'HIKVISION INTERCOM',category:'placa',description:'Videoporteiro 2 fios HD. Aço inox. Câmara 2Mpx. Áudio bidirecional. IP65|IK08. Modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD7003EY-IME2/DS-KD7003EY-IME2.png',pvp:162,pvi:70,notes:'Aço inoxidável'},
+    {id:'p35',ref:'DS-KD7003EY-IME2/Aluminum',brand:'HIKVISION INTERCOM',category:'placa',description:'Videoporteiro 2 Fios HD. Alumínio. Câmara 2Mpx. Áudio bidirecional. IP65|IK08. Modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD7003EY-IME2_Aluminum/DS-KD7003EY-IME2_Aluminum.png',pvp:148,pvi:64,notes:'Alumínio'},
+    {id:'p36',ref:'DS-KV7023EY-IME2',brand:'HIKVISION INTERCOM',category:'placa',description:'Videoporteiro 2 Fios HD. Câmara 2Mpx. Cartão MF e PIN. 2 relés. IP65|IK08.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KV7023EY-IME2/DS-KV7023EY-IME2.png',pvp:230,pvi:99,notes:'MF + PIN + 2 relés'},
+    {id:'p37',ref:'DS-KV7413EY-IME2',brand:'HIKVISION INTERCOM',category:'placa',description:'Videoporteiro 2 Fios HD. Câmara 2Mpx. Cartão MF. 2 relés. IP65|IK08.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KV7413EY-IME2/DS-KV7413EY-IME2.png',pvp:230,pvi:99,notes:'MF + 2 relés'},
+    {id:'p38',ref:'DS-KAD7060EY',brand:'HIKVISION INTERCOM',category:'distribuidor',description:'Distribuidor para edifícios. 2 Linhas HD. 6 grupos de 2 fios HD. Hubs em cascata.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAD7060EY/DS-KAD7060EY.png',pvp:130,pvi:56,notes:'Distribuidor principal'},
+    {id:'p39',ref:'DS-KAD7060EY-S',brand:'HIKVISION INTERCOM',category:'distribuidor',description:'Distribuidor secundário. Liga a DS-KAD7060EY. 2 Linhas HD. 6 grupos de 2 fios HD.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAD7060EY-S/DS-KAD7060EY-S.png',pvp:130,pvi:56,notes:'Distribuidor secundário (>22 monitores)'},
+    {id:'p40',ref:'DS-KAD7061EY',brand:'HIKVISION INTERCOM',category:'distribuidor_patamar',description:'Distribuidor de patamar. Até 4 monitores 2 fios HD. Alimentação DS-KAD706xEY.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAD7061EY/DS-KAD7061EY.png',pvp:50,pvi:21,notes:'1 por cada 4 monitores (com Wi-Fi)'},
+    {id:'p41',ref:'DS-KAW150-4N',brand:'HIKVISION INTERCOM',category:'fonte',description:'Fonte de alimentação. CC 48V/3.2A/150W. 2 saídas. Carril DIN. Para videoporteiros.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAW150-4N/DS-KAW150-4N.png',pvp:82,pvi:35,notes:'Fonte principal'},
+    {id:'p42',ref:'DS-KA-RL1E2',brand:'HIKVISION INTERCOM',category:'rele',description:'Módulo de relé. Saída NO/NC/COM adicional. Alimentação DS-KAD706xEY.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KA-RL1E2/DS-KA-RL1E2.png',pvp:80,pvi:35,notes:''},
+    {id:'p43',ref:'DS-KD-ACW1',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 1 módulo. Alumínio.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACW1/DS-KD-ACW1.png',pvp:64,pvi:28,notes:'1 módulo, superfície'},
+    {id:'p44',ref:'DS-KD-ACW2',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 2 módulos. Alumínio.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACW2/DS-KD-ACW2.png',pvp:90,pvi:38,notes:'2 módulos, superfície'},
+    {id:'p45',ref:'DS-KD-ACW3',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 3 módulos. Alumínio.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACW3/DS-KD-ACW3.png',pvp:150,pvi:64,notes:'3 módulos, superfície'},
+    {id:'p46',ref:'DS-KD-ACF1/Plastic',brand:'HIKVISION',category:'acessorio',description:'Caixa encastrada 1 módulo. Plástico.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACF1_Plastic/DS-KD-ACF1_Plastic.png',pvp:42,pvi:18,notes:'1 módulo, encastrado'},
+    {id:'p47',ref:'DS-KD-ACF2/Plastic',brand:'HIKVISION',category:'acessorio',description:'Caixa encastrada 2 módulos. Plástico.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACF2_Plastic/DS-KD-ACF2_Plastic.png',pvp:58,pvi:25,notes:'2 módulos, encastrado'},
+    {id:'p48',ref:'DS-KD-ACF3/Plastic',brand:'HIKVISION',category:'acessorio',description:'Caixa encastrada 3 módulos. Plástico.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACF3_Plastic/DS-KD-ACF3_Plastic.png',pvp:72,pvi:31,notes:'3 módulos, encastrado'},
+    {id:'p49',ref:'DS-KABD8003-RS1',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 1 módulo. Com viseira. SECC.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KABD8003-RS1/DS-KABD8003-RS1.png',pvp:30,pvi:13,notes:'1 módulo, viseira'},
+    {id:'p50',ref:'DS-KABD8003-RS2',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 2 módulos. Com viseira. SECC.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KABD8003-RS2/DS-KABD8003-RS2.png',pvp:36,pvi:16,notes:'2 módulos, viseira'},
+    {id:'p51',ref:'DS-KABD8003-RS3',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 3 módulos. Com viseira. SECC.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KABD8003-RS3/DS-KABD8003-RS3.png',pvp:44,pvi:19,notes:'3 módulos, viseira'},
+    {id:'p52',ref:'DS-KD-ACW1/S',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 1 módulo. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACW1_S/DS-KD-ACW1_S.png',pvp:96,pvi:41,notes:'1 módulo, inox'},
+    {id:'p53',ref:'DS-KD-ACW2/S',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 2 módulos. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACW2_S/DS-KD-ACW2_S.png',pvp:136,pvi:58,notes:'2 módulos, inox'},
+    {id:'p54',ref:'DS-KD-ACW3/S',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 3 módulos. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACW3_S/DS-KD-ACW3_S.png',pvp:210,pvi:90,notes:'3 módulos, inox'},
+    {id:'p55',ref:'DS-KD-ACF1/S',brand:'HIKVISION',category:'acessorio',description:'Caixa encastrada 1 módulo. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACF1_S/DS-KD-ACF1_S.png',pvp:80,pvi:34,notes:'1 módulo, encastrado, inox'},
+    {id:'p56',ref:'DS-KD-ACF2/S',brand:'HIKVISION',category:'acessorio',description:'Caixa encastrada 2 módulos. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACF2_S/DS-KD-ACF2_S.png',pvp:108,pvi:46,notes:'2 módulos, encastrado, inox'},
+    {id:'p57',ref:'DS-KD-ACF3/S',brand:'HIKVISION',category:'acessorio',description:'Caixa encastrada 3 módulos. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-ACF3_S/DS-KD-ACF3_S.png',pvp:142,pvi:61,notes:'3 módulos, encastrado, inox'},
+    {id:'p58',ref:'DS-KABD8003-RS1/S',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 1 módulo. Com viseira. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KABD8003-RS1_S/DS-KABD8003-RS1_S.png',pvp:44,pvi:19,notes:'1 módulo, viseira, inox'},
+    {id:'p59',ref:'DS-KABD8003-RS2/S',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 2 módulos. Com viseira. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KABD8003-RS2_S/DS-KABD8003-RS2_S.png',pvp:56,pvi:24,notes:'2 módulos, viseira, inox'},
+    {id:'p60',ref:'DS-KABD8003-RS3/S',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 3 módulos. Com viseira. Aço inox.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KABD8003-RS3_S/DS-KABD8003-RS3_S.png',pvp:66,pvi:29,notes:'3 módulos, viseira, inox'},
+    {id:'p61',ref:'DS-KDE-ACR3',brand:'HIKVISION',category:'acessorio',description:'Caixa superfície 3 módulos. Compatível multi-marca (Hikvision, Comelit, Bticino). Alumínio.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KDE-ACR3/DS-KDE-ACR3.png',pvp:166,pvi:71,notes:'Multi-marca'}
+  ],
+  getAll(){return Storage.get('app_products',this.catalog)},
+  getByRef(ref){return this.getAll().find(p=>p.ref===ref)},
+  getByCategory(cat){return this.getAll().filter(p=>p.category===cat)},
+  getPrice(p,mode){return mode==='pvi'?p.pvi:p.pvp}
+};
+/* === SEED === */
+const Seed={
+  VERSION:'v5',
+  init(){
+    if(Storage.get('app_seeded')===this.VERSION)return;
+    // Clear all old data to avoid stale/broken state
+    ['app_seeded','app_users','app_budgets','app_products','app_activity','app_session'].forEach(k=>localStorage.removeItem(k));
+    const u1={id:'u1',name:'Super Administrador',email:'superadmin@visiotech.pt',password:'admin123',role:'superadmin',company:'Visiotech',adminId:null,status:'active',priceMode:'pvp',lastLogin:new Date(Date.now()-3600000).toISOString(),lastActivity:new Date(Date.now()-600000).toISOString(),isOnline:false,createdAt:new Date().toISOString()};
+    const u2={id:'u2',name:'Ana Rodrigues',email:'ana@solucoes.pt',password:'admin123',role:'admin',company:'Soluções Tech Lda',adminId:null,status:'active',priceMode:'pvp',lastLogin:new Date(Date.now()-7200000).toISOString(),lastActivity:new Date(Date.now()-1800000).toISOString(),isOnline:false,createdAt:new Date().toISOString()};
+    const u3={id:'u3',name:'Carlos Mendes',email:'carlos@securenet.pt',password:'admin123',role:'admin',company:'SecureNet Portugal',adminId:null,status:'active',priceMode:'pvi',lastLogin:new Date(Date.now()-86400000).toISOString(),lastActivity:new Date(Date.now()-43200000).toISOString(),isOnline:false,createdAt:new Date().toISOString()};
+    const c1={id:'c1',name:'João Silva',email:'joao@solucoes.pt',password:'user123',role:'comercial',company:'Soluções Tech Lda',adminId:'u2',status:'active',priceMode:'pvp',lastLogin:new Date(Date.now()-1800000).toISOString(),lastActivity:new Date(Date.now()-300000).toISOString(),isOnline:false,createdAt:new Date().toISOString()};
+    const c2={id:'c2',name:'Marta Costa',email:'marta@solucoes.pt',password:'user123',role:'comercial',company:'Soluções Tech Lda',adminId:'u2',status:'active',priceMode:'pvp',lastLogin:new Date(Date.now()-3600000).toISOString(),lastActivity:new Date(Date.now()-900000).toISOString(),isOnline:false,createdAt:new Date().toISOString()};
+    const c3={id:'c3',name:'Rui Fernandes',email:'rui@solucoes.pt',password:'user123',role:'comercial',company:'Soluções Tech Lda',adminId:'u2',status:'suspended',priceMode:'pvp',lastLogin:new Date(Date.now()-172800000).toISOString(),lastActivity:new Date(Date.now()-172800000).toISOString(),isOnline:false,createdAt:new Date().toISOString()};
+    const c4={id:'c4',name:'Sofia Neves',email:'sofia@securenet.pt',password:'user123',role:'comercial',company:'SecureNet Portugal',adminId:'u3',status:'active',priceMode:'pvi',lastLogin:new Date(Date.now()-900000).toISOString(),lastActivity:new Date(Date.now()-120000).toISOString(),isOnline:false,createdAt:new Date().toISOString()};
+    const c5={id:'c5',name:'Pedro Alves',email:'pedro@securenet.pt',password:'user123',role:'comercial',company:'SecureNet Portugal',adminId:'u3',status:'active',priceMode:'pvi',lastLogin:new Date(Date.now()-7200000).toISOString(),lastActivity:new Date(Date.now()-3600000).toISOString(),isOnline:false,createdAt:new Date().toISOString()};
+    Storage.set('app_users',[u1,u2,u3,c1,c2,c3,c4,c5]);
+    Storage.set('app_products',Products.catalog);
+    const b1id=Utils.uuid(),b2id=Utils.uuid(),b3id=Utils.uuid();
+    Storage.set('app_budgets',[
+      {id:b1id,comercialId:'c1',adminId:'u2',clientName:'Condomínio Jardins do Tejo',clientEmail:'admin@jardinstejo.pt',status:'approved',priceMode:'pvp',fractions:12,totalMonitors:12,hasWifi:true,items:[
+        {productId:'p34',ref:'DS-KD7003EY-IME2',description:'Videoporteiro 2 fios HD. Aço inox. Câmara 2Mpx. Áudio bidirecional. IP65|IK08. Modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD7003EY-IME2/DS-KD7003EY-IME2.png',qty:1,unitPrice:162,subtotal:162,isAutomatic:false},
+        {productId:'p05',ref:'DS-KD-KK',description:'Módulo extensão. Botoneira 6 botões com LEDs. IP65. Montagem modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-KK/DS-KD-KK.png',qty:1,unitPrice:64,subtotal:64,isAutomatic:false},
+        {productId:'p41',ref:'DS-KAW150-4N',description:'Fonte de alimentação. CC 48V/3.2A/150W. 2 saídas. Carril DIN.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAW150-4N/DS-KAW150-4N.png',qty:1,unitPrice:82,subtotal:82,isAutomatic:true},
+        {productId:'p38',ref:'DS-KAD7060EY',description:'Distribuidor para edifícios. 2 Linhas HD. 6 grupos de 2 fios HD.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAD7060EY/DS-KAD7060EY.png',qty:1,unitPrice:130,subtotal:130,isAutomatic:true},
+        {productId:'p40',ref:'DS-KAD7061EY',description:'Distribuidor de patamar. Até 4 monitores 2 fios HD.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAD7061EY/DS-KAD7061EY.png',qty:3,unitPrice:50,subtotal:150,isAutomatic:true},
+        {productId:'p27',ref:'DS-KH7100EY-WE2',description:'Monitor videoporteiro. Visor TFT 4.3". 2 fios HD + WiFi. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7100EY-WE2/DS-KH7100EY-WE2.png',qty:12,unitPrice:150,subtotal:1800,isAutomatic:false}
+      ],totals:{subtotal:2388,iva:549.24,total:2937.24},createdAt:new Date(Date.now()-86400000*5).toISOString(),updatedAt:new Date(Date.now()-86400000*3).toISOString()},
+      {id:b2id,comercialId:'c1',adminId:'u2',clientName:'Residencial Vista Mar',clientEmail:'geral@vistamar.pt',status:'sent',priceMode:'pvp',fractions:24,totalMonitors:24,hasWifi:false,items:[
+        {productId:'p35',ref:'DS-KD7003EY-IME2/Aluminum',description:'Videoporteiro 2 Fios HD. Alumínio. Câmara 2Mpx. Áudio bidirecional. IP65|IK08. Modular.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD7003EY-IME2_Aluminum/DS-KD7003EY-IME2_Aluminum.png',qty:1,unitPrice:148,subtotal:148,isAutomatic:false},
+        {productId:'p12',ref:'DS-KD-K12',description:'Módulo extensão. Botoneira 12 botões com LEDs. IP65.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KD-K12/DS-KD-K12.png',qty:2,unitPrice:88,subtotal:176,isAutomatic:false},
+        {productId:'p41',ref:'DS-KAW150-4N',description:'Fonte de alimentação. CC 48V/3.2A/150W. 2 saídas. Carril DIN.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAW150-4N/DS-KAW150-4N.png',qty:1,unitPrice:82,subtotal:82,isAutomatic:true},
+        {productId:'p38',ref:'DS-KAD7060EY',description:'Distribuidor para edifícios. 2 Linhas HD. 6 grupos de 2 fios HD.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAD7060EY/DS-KAD7060EY.png',qty:1,unitPrice:130,subtotal:130,isAutomatic:true},
+        {productId:'p21',ref:'DS-KH7300EY-TE2',description:'Monitor videoporteiro. Visor TFT 7". Áudio bidirecional. 2 Linhas HD. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-TE2/DS-KH7300EY-TE2.png',qty:24,unitPrice:159.12,subtotal:3818.88,isAutomatic:false}
+      ],totals:{subtotal:4354.88,iva:1001.62,total:5356.5},createdAt:new Date(Date.now()-86400000*2).toISOString(),updatedAt:new Date(Date.now()-86400000).toISOString()},
+      {id:b3id,comercialId:'c4',adminId:'u3',clientName:'Edifício Central Park',clientEmail:'info@centralpark.pt',status:'draft',priceMode:'pvi',fractions:8,totalMonitors:8,hasWifi:true,items:[
+        {productId:'p36',ref:'DS-KV7023EY-IME2',description:'Videoporteiro 2 Fios HD. Câmara 2Mpx. Cartão MF e PIN. 2 relés. IP65|IK08.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KV7023EY-IME2/DS-KV7023EY-IME2.png',qty:1,unitPrice:99,subtotal:99,isAutomatic:false},
+        {productId:'p41',ref:'DS-KAW150-4N',description:'Fonte de alimentação. CC 48V/3.2A/150W. 2 saídas. Carril DIN.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAW150-4N/DS-KAW150-4N.png',qty:1,unitPrice:35,subtotal:35,isAutomatic:true},
+        {productId:'p38',ref:'DS-KAD7060EY',description:'Distribuidor para edifícios. 2 Linhas HD. 6 grupos de 2 fios HD.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAD7060EY/DS-KAD7060EY.png',qty:1,unitPrice:56,subtotal:56,isAutomatic:true},
+        {productId:'p40',ref:'DS-KAD7061EY',description:'Distribuidor de patamar. Até 4 monitores 2 fios HD.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KAD7061EY/DS-KAD7061EY.png',qty:2,unitPrice:21,subtotal:42,isAutomatic:true},
+        {productId:'p29',ref:'DS-KH7300EY-WTE2',description:'Monitor videoporteiro. Visor TFT 7". 2 fios HD + WiFi. microSD 128GB.',image:'https://d1x12lhh8s9nlj.cloudfront.net/images/productos/products/DS-KH7300EY-WTE2/DS-KH7300EY-WTE2.png',qty:8,unitPrice:87,subtotal:696,isAutomatic:false}
+      ],totals:{subtotal:928,iva:213.44,total:1141.44},createdAt:new Date(Date.now()-86400000).toISOString(),updatedAt:new Date().toISOString()}
+    ]);
+    Storage.set('app_activity',[
+      {id:Utils.uuid(),userId:'c1',userName:'João Silva',action:'create_budget',detail:'Criou orçamento para Condomínio Jardins do Tejo',timestamp:new Date(Date.now()-3600000).toISOString(),color:'var(--accent)'},
+      {id:Utils.uuid(),userId:'u2',userName:'Ana Rodrigues',action:'login',detail:'Iniciou sessão',timestamp:new Date(Date.now()-7200000).toISOString(),color:'var(--success)'},
+      {id:Utils.uuid(),userId:'c4',userName:'Sofia Neves',action:'create_budget',detail:'Criou orçamento para Edifício Central Park',timestamp:new Date(Date.now()-10800000).toISOString(),color:'var(--accent)'},
+      {id:Utils.uuid(),userId:'u3',userName:'Carlos Mendes',action:'login',detail:'Iniciou sessão',timestamp:new Date(Date.now()-86400000).toISOString(),color:'var(--success)'}
+    ]);
+    Storage.set('app_seeded',this.VERSION);
+  }
+};
+
+/* === AUTH === */
+const Auth={
+  currentUser:null,
+  init(){
+    const s=Storage.get('app_session');
+    if(!s)return false;
+    if(!s.rememberMe&&s.expiresAt&&Date.now()>s.expiresAt){this.logout(true);return false}
+    const user=Storage.get('app_users',[]).find(u=>u.id===s.userId);
+    if(!user||user.status==='suspended'){this.logout(true);return false}
+    this.currentUser=user;return true;
+  },
+  login(){
+    const email=document.getElementById('loginEmail').value.trim();
+    const pass=document.getElementById('loginPassword').value;
+    const remember=document.getElementById('rememberMe').checked;
+    if(!email||!pass){this.showError('Por favor preencha todos os campos.');return}
+    const user=Storage.get('app_users',[]).find(u=>u.email.toLowerCase()===email.toLowerCase()&&u.password===pass);
+    if(!user){this.showError('Email ou password incorretos.');return}
+    if(user.status==='suspended'){this.showError('Esta conta está suspensa. Contacte o administrador.');return}
+    const now=new Date().toISOString();
+    Storage.update('app_users',user.id,{lastLogin:now,lastActivity:now,isOnline:true});
+    Storage.set('app_session',{userId:user.id,role:user.role,rememberMe:remember,expiresAt:remember?null:Date.now()+8*3600000,loginAt:now});
+    Storage.push('app_activity',{id:Utils.uuid(),userId:user.id,userName:user.name,action:'login',detail:'Iniciou sessão',timestamp:now,color:'var(--success)'});
+    this.currentUser={...user,lastLogin:now,lastActivity:now,isOnline:true};
+    App.showApp();
+  },
+  logout(silent=false){
+    if(this.currentUser){
+      Storage.update('app_users',this.currentUser.id,{isOnline:false,lastActivity:new Date().toISOString()});
+      if(!silent)Storage.push('app_activity',{id:Utils.uuid(),userId:this.currentUser.id,userName:this.currentUser.name,action:'logout',detail:'Terminou sessão',timestamp:new Date().toISOString(),color:'var(--text-muted)'});
+    }
+    Storage.remove('app_session');this.currentUser=null;
+    App.showLogin();
+    if(!silent)Toast.success('Sessão terminada com sucesso.');
+  },
+  togglePass(){
+    const inp=document.getElementById('loginPassword');
+    const ic=document.getElementById('passIcon');
+    if(inp.type==='password'){inp.type='text';ic.className='fas fa-eye-slash'}
+    else{inp.type='password';ic.className='fas fa-eye'}
+  },
+  showError(msg){
+    const el=document.getElementById('loginError');
+    document.getElementById('loginErrorMsg').textContent=msg;
+    el.style.display='flex';
+  },
+  resetData(){
+    ['app_seeded','app_users','app_budgets','app_products','app_activity','app_session','app_theme','app_sidebar_collapsed'].forEach(k=>localStorage.removeItem(k));
+    Toast.info('Dados repostos. A recarregar…');
+    setTimeout(()=>location.reload(),800);
+  },
+  forgotPassword(){
+    Swal.fire({title:'Recuperar Password',text:'Introduza o seu email para recuperar a password.',input:'email',inputPlaceholder:'utilizador@empresa.pt',showCancelButton:true,confirmButtonText:'Enviar',cancelButtonText:'Cancelar',confirmButtonColor:'#6366f1',background:App.theme==='dark'?'#13161e':'#fff',color:App.theme==='dark'?'#f1f5f9':'#0f172a'}).then(r=>{if(r.isConfirmed&&r.value)Toast.success('Se o email existir, receberá as instruções em breve.');});
+  }
+};
+
+/* === APP === */
+const App={
+  theme:'dark',sidebarCollapsed:false,
+  init(){
+    this.theme=Storage.get('app_theme','dark');
+    this.applyTheme(this.theme);
+    this.sidebarCollapsed=Storage.get('app_sidebar_collapsed',false);
+    Seed.init();
+    if(Auth.init())this.showApp();else this.showLogin();
+    document.getElementById('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')Auth.login()});
+    document.getElementById('loginEmail').addEventListener('keydown',e=>{if(e.key==='Enter')Auth.login()});
+  },
+  showLogin(){
+    document.getElementById('login-page').style.display='flex';
+    document.getElementById('app-page').style.display='none';
+    document.getElementById('loginError').style.display='none';
+  },
+  showApp(){
+    document.getElementById('login-page').style.display='none';
+    document.getElementById('app-page').style.display='block';
+    this.buildSidebar();this.updateNavbar();
+    if(this.sidebarCollapsed)document.getElementById('sidebar').classList.add('collapsed');
+    Pages.dashboard();
+    setTimeout(()=>Pages.updateBellDot&&Pages.updateBellDot(),500);
+  },
+  toggleTheme(){
+    this.theme=this.theme==='dark'?'light':'dark';
+    this.applyTheme(this.theme);
+    Storage.set('app_theme',this.theme);
+  },
+  applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    const icon=t==='dark'?'fa-sun':'fa-moon';
+    ['themeIconLogin','themeIconApp'].forEach(id=>{const el=document.getElementById(id);if(el)el.className=`fas ${icon}`});
+  },
+  toggleSidebar(){
+    const sb=document.getElementById('sidebar');
+    if(window.innerWidth<=768){sb.classList.toggle('mobile-open');document.getElementById('sidebar-overlay').classList.toggle('active')}
+    else{sb.classList.toggle('collapsed');this.sidebarCollapsed=sb.classList.contains('collapsed');Storage.set('app_sidebar_collapsed',this.sidebarCollapsed)}
+  },
+  closeMobileSidebar(){document.getElementById('sidebar').classList.remove('mobile-open');document.getElementById('sidebar-overlay').classList.remove('active')},
+  buildSidebar(){
+    const user=Auth.currentUser;if(!user)return;
+    const menus={
+      superadmin:[{s:'Principal'},{icon:'fa-gauge',label:'Dashboard',page:'dashboard'},{s:'Gestão'},{icon:'fa-user-shield',label:'Administradores',page:'admins'},{icon:'fa-users',label:'Todos os Comerciais',page:'allCommercials'},{s:'Sistema'},{icon:'fa-box',label:'Catálogo de Produtos',page:'products'},{icon:'fa-file-invoice',label:'Orçamentos',page:'allBudgets'}],
+      admin:[{s:'Principal'},{icon:'fa-gauge',label:'Dashboard',page:'dashboard'},{s:'Equipa'},{icon:'fa-users',label:'Comerciais',page:'myCommercials'},{s:'Negócio'},{icon:'fa-box',label:'Catálogo de Produtos',page:'products'},{icon:'fa-file-invoice',label:'Orçamentos',page:'adminBudgets'}],
+      comercial:[{s:'Principal'},{icon:'fa-gauge',label:'Dashboard',page:'dashboard'},{s:'Orçamentos'},{icon:'fa-plus-circle',label:'Novo Orçamento',page:'newBudget'},{icon:'fa-file-invoice',label:'Os Meus Orçamentos',page:'myBudgets'},{s:'Referência'},{icon:'fa-box',label:'Catálogo de Produtos',page:'products'}]
+    };
+    let html='';
+    for(const item of(menus[user.role]||[])){
+      if(item.s)html+=`<div class="nav-section-title">${item.s}</div>`;
+      else html+=`<div class="nav-item" data-page="${item.page}" onclick="Pages.${item.page}()"><i class="fas ${item.icon}"></i><span class="nav-item-label">${item.label}</span><span class="sidebar-tooltip">${item.label}</span></div>`;
+    }
+    document.getElementById('sidebarNav').innerHTML=html;
+    document.getElementById('sidebarAvatar').textContent=Utils.initials(user.name);
+    document.getElementById('sidebarUserName').textContent=user.name;
+    document.getElementById('sidebarUserRole').textContent={superadmin:'Super Admin',admin:'Administrador',comercial:'Comercial'}[user.role]||user.role;
+  },
+  updateNavbar(){
+    const user=Auth.currentUser;if(!user)return;
+    document.getElementById('navbarAvatar').textContent=Utils.initials(user.name);
+    document.getElementById('navbarUserName').textContent=user.name;
+  },
+  setActivePage(page,title){
+    document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
+    document.getElementById('navPageTitle').textContent=title;
+    this.closeMobileSidebar();
+  },
+  setContent(html){
+    const mc=document.getElementById('mainContent');
+    mc.innerHTML=html;mc.classList.add('fade-in');setTimeout(()=>mc.classList.remove('fade-in'),400);
+  },
+  swalOpts(){return{background:this.theme==='dark'?'#13161e':'#fff',color:this.theme==='dark'?'#f1f5f9':'#0f172a'}}
+};
+/* === PAGES === */
+const Pages={
+  statusBadge(s){return{draft:'badge-muted',sent:'badge-info',approved:'badge-success',rejected:'badge-danger'}[s]||'badge-muted'},
+  statusLabel(s){return{draft:'Rascunho',sent:'Enviado',approved:'Aprovado',rejected:'Rejeitado'}[s]||s},
+  catLabel(c){return{modulo:'Módulo de Extensão',monitor:'Monitor',monitor_wifi:'Monitor Wi-Fi',placa:'Placa Exterior',distribuidor:'Distribuidor',distribuidor_patamar:'Dist. Patamar',fonte:'Fonte Alimentação',rele:'Módulo Relé',acessorio:'Acessório'}[c]||c},
+  closeModal(id){const el=document.getElementById(id);if(el)el.remove()},
+  dtLang(){return{lengthMenu:'Mostrar _MENU_ registos',search:'Pesquisar:',info:'A mostrar _START_ a _END_ de _TOTAL_ registos',paginate:{first:'«',last:'»',next:'›',previous:'‹'},zeroRecords:'Sem resultados',buttons:{excel:'Excel',pdf:'PDF',print:'Imprimir',csv:'CSV',copy:'Copiar',colvis:'Colunas'}}},
+  dtOpts(extraOpts={}){return{language:this.dtLang(),dom:'<"flex items-center justify-between mb-16"lB>frtip',buttons:[{extend:'excel',text:'<i class="fas fa-file-excel"></i> Excel',className:'btn btn-success btn-sm',title:'Visiotech Calc'},{extend:'pdf',text:'<i class="fas fa-file-pdf"></i> PDF',className:'btn btn-danger btn-sm',title:'Visiotech Calc'},{extend:'print',text:'<i class="fas fa-print"></i> Imprimir',className:'btn btn-secondary btn-sm'}],...extraOpts}},
+
+  /* --- DASHBOARD --- */
+  dashboard(){
+    App.setActivePage('dashboard','Dashboard');
+    const u=Auth.currentUser;
+    if(u.role==='superadmin')this.dashSuperAdmin();
+    else if(u.role==='admin')this.dashAdmin();
+    else this.dashComercial();
+  },
+
+  dashSuperAdmin(){
+    const users=Storage.get('app_users',[]);
+    const admins=users.filter(u=>u.role==='admin');
+    const coms=users.filter(u=>u.role==='comercial');
+    const budgets=Storage.get('app_budgets',[]);
+    const activity=Storage.get('app_activity',[]).slice().reverse().slice(0,10);
+    App.setContent(`
+<div class="page-header flex items-center justify-between">
+  <div><h1 class="page-title">Dashboard Global</h1><p class="page-subtitle">${new Date().toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p></div>
+</div>
+<div class="grid grid-4 mb-16">
+  <div class="stat-card"><div class="stat-icon accent"><i class="fas fa-user-shield"></i></div><div><div class="stat-value">${admins.length}</div><div class="stat-label">Total de Admins</div></div></div>
+  <div class="stat-card"><div class="stat-icon success"><i class="fas fa-users"></i></div><div><div class="stat-value">${coms.length}</div><div class="stat-label">Total de Comerciais</div></div></div>
+  <div class="stat-card"><div class="stat-icon info"><i class="fas fa-file-invoice"></i></div><div><div class="stat-value">${budgets.length}</div><div class="stat-label">Total de Orçamentos</div></div></div>
+  <div class="stat-card"><div class="stat-icon warning"><i class="fas fa-circle-dot"></i></div><div><div class="stat-value">${users.filter(u=>u.isOnline).length}</div><div class="stat-label">Online Agora</div></div></div>
+</div>
+<div class="grid grid-2 mb-16">
+  <div class="card">
+    <div class="card-header"><span class="card-title">Administradores</span><div class="flex gap-2"><span class="badge badge-success">${admins.filter(a=>a.status==='active').length} Ativos</span><span class="badge badge-danger">${admins.filter(a=>a.status==='suspended').length} Suspensos</span></div></div>
+    ${admins.map(a=>`<div class="user-list-item"><div class="user-avatar ${Utils.avatarColor(a.name)}" style="width:34px;height:34px;font-size:.78rem">${Utils.initials(a.name)}</div><div class="user-info"><div class="user-name">${a.name}</div><div class="user-meta">${a.company} · ${Utils.timeAgo(a.lastActivity)}</div></div><span class="badge ${a.status==='active'?'badge-success':'badge-danger'}">${a.status==='active'?'Ativo':'Suspenso'}</span></div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Atividade Recente</span></div>
+    ${activity.map(a=>`<div class="activity-item"><div class="activity-dot" style="background:${a.color}"></div><div class="activity-content"><div class="activity-text"><strong>${a.userName}</strong> — ${a.detail}</div><div class="activity-time">${Utils.formatDateTime(a.timestamp)}</div></div></div>`).join('')}
+  </div>
+</div>
+<div class="grid grid-2 mb-16">
+  <div class="card"><div class="card-header"><span class="card-title">Orçamentos Mensais</span></div><div class="chart-container"><canvas id="cBudgets"></canvas></div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Estado dos Orçamentos</span></div><div class="chart-container"><canvas id="cStatus"></canvas></div></div>
+</div>
+<div class="grid grid-2 mb-16">
+  <div class="card"><div class="card-header"><span class="card-title">Distribuição por Role</span></div><div class="chart-container"><canvas id="cRoles"></canvas></div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Valor de Orçamentos por Mês (€)</span></div><div class="chart-container"><canvas id="cValue"></canvas></div></div>
+<div class="card">
+  <div class="card-header"><span class="card-title"><i class="fas fa-clock" style="color:var(--accent);margin-right:8px"></i>Últimos Logins</span><button class="btn btn-secondary btn-sm" onclick="Pages.admins()">Ver todos os admins</button></div>
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead><tr><th>Utilizador</th><th>Role</th><th>Empresa</th><th>Último Login</th><th>Última Atividade</th><th>Estado</th></tr></thead>
+      <tbody>
+        ${[...admins,...coms].sort((a,b)=>new Date(b.lastLogin||0)-new Date(a.lastLogin||0)).slice(0,10).map(u=>`<tr>
+          <td><div class="flex items-center gap-3"><div class="user-avatar ${Utils.avatarColor(u.name)}" style="width:30px;height:30px;font-size:.72rem">${Utils.initials(u.name)}</div><div><div class="col-name">${u.name}</div><div style="font-size:.73rem;color:var(--text-muted)">${u.email}</div></div></div></td>
+          <td><span class="badge ${u.role==='admin'?'badge-accent':'badge-info'}">${u.role==='admin'?'Admin':'Comercial'}</span></td>
+          <td style="font-size:.82rem">${u.company}</td>
+          <td style="font-size:.82rem">${Utils.formatDateTime(u.lastLogin)}</td>
+          <td style="font-size:.82rem">${Utils.timeAgo(u.lastActivity)}</td>
+          <td><span class="badge ${u.status==='active'?'badge-success':'badge-danger'}">${u.status==='active'?'Ativo':'Suspenso'}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>`);
+    setTimeout(()=>{
+      const isDark=App.theme==='dark',gc=isDark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)',tc=isDark?'#94a3b8':'#475569';
+      new Chart(document.getElementById('cBudgets'),{type:'bar',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],datasets:[{label:'Orçamentos',data:[3,5,4,7,6,8,5,9,11,7,12,budgets.length],backgroundColor:'rgba(99,102,241,.7)',borderColor:'#6366f1',borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc}},y:{grid:{color:gc},ticks:{color:tc}}}}});
+      const bs={draft:0,sent:0,approved:0,rejected:0};budgets.forEach(b=>{if(bs[b.status]!==undefined)bs[b.status]++});
+      new Chart(document.getElementById('cStatus'),{type:'doughnut',data:{labels:['Rascunho','Enviado','Aprovado','Rejeitado'],datasets:[{data:[bs.draft,bs.sent,bs.approved,bs.rejected],backgroundColor:['#94a3b8','#3b82f6','#22c55e','#ef4444'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{color:tc,padding:16,font:{size:12}}}}}});
+      new Chart(document.getElementById('cRoles'),{type:'pie',data:{labels:['Super Admins','Admins','Comerciais'],datasets:[{data:[users.filter(u=>u.role==='superadmin').length,admins.length,coms.length],backgroundColor:['#6366f1','#22c55e','#3b82f6'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{color:tc,padding:14,font:{size:12}}}}}});
+      const monthValues=Array(12).fill(0);budgets.forEach(b=>{const m=new Date(b.createdAt).getMonth();monthValues[m]+=(b.totals?.total||0)});
+      new Chart(document.getElementById('cValue'),{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],datasets:[{label:'Valor (€)',data:monthValues,fill:true,backgroundColor:'rgba(34,197,94,.1)',borderColor:'#22c55e',tension:.4,pointBackgroundColor:'#22c55e'}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc}},y:{grid:{color:gc},ticks:{color:tc,callback:v=>Utils.formatCurrency(v)}}}}});
+    },100);
+  },
+
+  dashAdmin(){
+    const user=Auth.currentUser;
+    const users=Storage.get('app_users',[]);
+    const myC=users.filter(u=>u.role==='comercial'&&u.adminId===user.id);
+    const budgets=Storage.get('app_budgets',[]).filter(b=>b.adminId===user.id);
+    const total=budgets.reduce((s,b)=>s+(b.totals?.total||0),0);
+    App.setContent(`
+<div class="page-header flex items-center justify-between">
+  <div><h1 class="page-title">Olá, ${user.name.split(' ')[0]}! 👋</h1><p class="page-subtitle">${user.company} · Preços: <strong>${(user.priceMode||'pvp').toUpperCase()}</strong></p></div>
+  <div class="page-actions"><button class="btn btn-accent" onclick="Pages.myCommercials()"><i class="fas fa-users"></i> Gerir Equipa</button></div>
+</div>
+<div class="grid grid-4 mb-16">
+  <div class="stat-card"><div class="stat-icon success"><i class="fas fa-users"></i></div><div><div class="stat-value">${myC.length}</div><div class="stat-label">Comerciais</div></div></div>
+  <div class="stat-card"><div class="stat-icon accent"><i class="fas fa-file-invoice"></i></div><div><div class="stat-value">${budgets.length}</div><div class="stat-label">Orçamentos</div></div></div>
+  <div class="stat-card"><div class="stat-icon info"><i class="fas fa-check-circle"></i></div><div><div class="stat-value">${budgets.filter(b=>b.status==='approved').length}</div><div class="stat-label">Aprovados</div></div></div>
+  <div class="stat-card"><div class="stat-icon warning"><i class="fas fa-euro-sign"></i></div><div><div class="stat-value" style="font-size:1rem">${Utils.formatCurrency(total)}</div><div class="stat-label">Valor Total</div></div></div>
+</div>
+<div class="grid grid-2 mb-16">
+  <div class="card">
+    <div class="card-header"><span class="card-title">A Minha Equipa</span><button class="btn btn-secondary btn-sm" onclick="Pages.myCommercials()">Ver todos</button></div>
+    ${myC.length===0?'<div class="empty-state"><i class="fas fa-users"></i><h3>Sem comerciais</h3><p>Adicione comerciais à sua equipa.</p></div>':myC.slice(0,5).map(c=>`<div class="user-list-item"><div class="user-avatar ${Utils.avatarColor(c.name)}" style="width:34px;height:34px;font-size:.78rem">${Utils.initials(c.name)}</div><div class="user-info"><div class="user-name">${c.name}</div><div class="user-meta">${c.email} · ${Utils.timeAgo(c.lastLogin)}</div></div><span class="badge ${c.status==='active'?'badge-success':'badge-danger'}">${c.status==='active'?'Ativo':'Suspenso'}</span></div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Referência de Preços</span></div>
+    <div class="alert alert-info"><i class="fas fa-info-circle"></i><div><strong>Os orçamentos usam sempre preços PVP.</strong><br><small>O comercial aplica o desconto manualmente na proposta enviada ao cliente.</small></div></div>
+    <div style="font-size:.82rem;color:var(--text-secondary);padding:4px 0">O seu preço PVI de referência é definido no seu perfil de administrador.</div>
+    <div class="divider"></div>
+    <div class="card-header" style="margin-bottom:8px"><span class="card-title">Últimos Orçamentos</span></div>
+    ${budgets.slice(-3).reverse().map(b=>`<div class="budget-card"><div class="budget-icon"><i class="fas fa-file-invoice"></i></div><div class="budget-info"><div class="budget-client">${b.clientName}</div><div class="budget-meta">${Utils.formatDate(b.createdAt)}</div></div><div class="budget-value"><div class="budget-amount">${Utils.formatCurrency(b.totals?.total)}</div><span class="badge ${this.statusBadge(b.status)}">${this.statusLabel(b.status)}</span></div></div>`).join('')}
+  </div>
+</div>
+<div class="grid grid-2">
+  <div class="card"><div class="card-header"><span class="card-title">Evolução de Orçamentos</span></div><div class="chart-container"><canvas id="cAdmin"></canvas></div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Produtos Mais Usados</span></div><div class="chart-container"><canvas id="cTopProds"></canvas></div></div>
+</div>`);
+    setTimeout(()=>{
+      const isDark=App.theme==='dark',gc=isDark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)',tc=isDark?'#94a3b8':'#475569';
+      new Chart(document.getElementById('cAdmin'),{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],datasets:[{label:'Valor (€)',data:[1200,1800,1500,2800,2200,3100,1900,3500,4200,2700,4800,total||5200],fill:true,backgroundColor:'rgba(99,102,241,.1)',borderColor:'#6366f1',tension:.4,pointBackgroundColor:'#6366f1'}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc}},y:{grid:{color:gc},ticks:{color:tc}}}}});
+      // Top products from budget items
+      const prodCount={};budgets.forEach(b=>(b.items||[]).forEach(item=>{if(item.ref)prodCount[item.ref]=(prodCount[item.ref]||0)+item.qty}));
+      const topProds=Object.entries(prodCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+      if(topProds.length>0){new Chart(document.getElementById('cTopProds'),{type:'bar',data:{labels:topProds.map(([ref])=>ref.length>18?ref.substring(0,16)+'…':ref),datasets:[{data:topProds.map(([,qty])=>qty),backgroundColor:['#6366f1','#22c55e','#3b82f6','#f59e0b','#ef4444','#8b5cf6'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc}},y:{grid:{display:false},ticks:{color:tc}}}}});}
+      else{const el=document.getElementById('cTopProds');if(el){const p=el.parentElement;p.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-box"></i><p>Crie orçamentos para ver produtos mais usados.</p></div>'}}
+    },100);
+  },
+
+  dashComercial(){
+    const user=Auth.currentUser;
+    const budgets=Storage.get('app_budgets',[]).filter(b=>b.comercialId===user.id);
+    const total=budgets.reduce((s,b)=>s+(b.totals?.total||0),0);
+    App.setContent(`
+<div class="page-header flex items-center justify-between">
+  <div><h1 class="page-title">Olá, ${user.name.split(' ')[0]}! 👋</h1><p class="page-subtitle">${user.company} · Orçamentos sempre em <strong>PVP</strong></p></div>
+  <div class="page-actions"><button class="btn btn-accent" onclick="Pages.newBudget()"><i class="fas fa-plus"></i> Novo Orçamento</button></div>
+</div>
+<div class="grid grid-4 mb-16">
+  <div class="stat-card"><div class="stat-icon accent"><i class="fas fa-file-invoice"></i></div><div><div class="stat-value">${budgets.length}</div><div class="stat-label">Os Meus Orçamentos</div></div></div>
+  <div class="stat-card"><div class="stat-icon success"><i class="fas fa-check-circle"></i></div><div><div class="stat-value">${budgets.filter(b=>b.status==='approved').length}</div><div class="stat-label">Aprovados</div></div></div>
+  <div class="stat-card"><div class="stat-icon info"><i class="fas fa-paper-plane"></i></div><div><div class="stat-value">${budgets.filter(b=>b.status==='sent').length}</div><div class="stat-label">Enviados</div></div></div>
+  <div class="stat-card"><div class="stat-icon warning"><i class="fas fa-euro-sign"></i></div><div><div class="stat-value" style="font-size:1rem">${Utils.formatCurrency(total)}</div><div class="stat-label">Valor Total</div></div></div>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">Os Meus Orçamentos</span><button class="btn btn-accent btn-sm" onclick="Pages.newBudget()"><i class="fas fa-plus"></i> Novo</button></div>
+  ${budgets.length===0?`<div class="empty-state"><i class="fas fa-file-invoice"></i><h3>Sem orçamentos ainda</h3><p>Crie o seu primeiro orçamento.</p><button class="btn btn-accent" style="margin-top:16px" onclick="Pages.newBudget()"><i class="fas fa-plus"></i> Criar Orçamento</button></div>`:budgets.map(b=>`
+  <div class="budget-card">
+    <div class="budget-icon"><i class="fas fa-file-invoice"></i></div>
+    <div class="budget-info">
+      <div class="budget-id">#${b.id.slice(0,8).toUpperCase()}</div>
+      <div class="budget-client">${b.clientName||'Cliente sem nome'}</div>
+      <div class="budget-meta">${b.fractions} frações · ${b.totalMonitors} monitores · ${b.hasWifi?'Com Wi-Fi':'Sem Wi-Fi'} · ${Utils.formatDate(b.createdAt)}</div>
+    </div>
+    <div class="budget-value"><div class="budget-amount">${Utils.formatCurrency(b.totals?.total)}</div><span class="badge ${this.statusBadge(b.status)}">${this.statusLabel(b.status)}</span></div>
+    <div class="flex gap-2" style="flex-shrink:0">
+      <button class="btn btn-secondary btn-xs" onclick="Pages.duplicateBudget('${b.id}')"><i class="fas fa-copy"></i></button>
+      <button class="btn btn-accent btn-xs" onclick="Pages.exportBudgetPDF('${b.id}')"><i class="fas fa-file-pdf"></i></button>
+      <button class="btn btn-secondary btn-xs" onclick="Pages.changeStatus('${b.id}')" title="Alterar estado"><i class="fas fa-tag"></i></button>
+      <button class="btn btn-danger btn-xs" onclick="Pages.deleteBudget('${b.id}')"><i class="fas fa-trash"></i></button>
+    </div>
+  </div>`).join('')}
+</div>
+${budgets.length>0?`
+<div class="grid grid-2" style="margin-top:16px">
+  <div class="card"><div class="card-header"><span class="card-title">Orçamentos por Estado</span></div><div class="chart-container"><canvas id="cComStatus"></canvas></div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Produtos Mais Usados</span></div><div class="chart-container"><canvas id="cComProds"></canvas></div></div>
+</div>
+<div class="card" style="margin-top:16px">
+  <div class="card-header"><span class="card-title">Evolução Mensal — Valor de Orçamentos</span></div>
+  <div class="chart-container"><canvas id="cComEvolucao"></canvas></div>
+</div>`:''}`);
+    if(budgets.length>0){setTimeout(()=>{
+      const isDark=App.theme==='dark',gc=isDark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)',tc=isDark?'#94a3b8':'#475569';
+      const bs={draft:0,sent:0,approved:0,rejected:0};budgets.forEach(b=>{if(bs[b.status]!==undefined)bs[b.status]++});
+      const csEl=document.getElementById('cComStatus');
+      if(csEl)new Chart(csEl,{type:'doughnut',data:{labels:['Rascunho','Enviado','Aprovado','Rejeitado'],datasets:[{data:[bs.draft,bs.sent,bs.approved,bs.rejected],backgroundColor:['#94a3b8','#3b82f6','#22c55e','#ef4444'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{color:tc,padding:12,font:{size:11}}}}}});
+      const pc={};budgets.forEach(b=>(b.items||[]).forEach(i=>{if(i.ref)pc[i.ref]=(pc[i.ref]||0)+i.qty}));
+      const tp=Object.entries(pc).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const cpEl=document.getElementById('cComProds');
+      if(cpEl){if(tp.length>0)new Chart(cpEl,{type:'bar',data:{labels:tp.map(([r])=>r.length>18?r.substring(0,16)+'\u2026':r),datasets:[{data:tp.map(([,q])=>q),backgroundColor:['#6366f1','#22c55e','#3b82f6','#f59e0b','#ef4444'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc}},y:{grid:{display:false},ticks:{color:tc}}}}});
+      else cpEl.parentElement.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-box"></i><p>Crie orçamentos para ver produtos mais usados.</p></div>';}
+      const mv=Array(12).fill(0);budgets.forEach(b=>{const m=new Date(b.createdAt).getMonth();mv[m]+=(b.totals?.total||0)});
+      const ceEl=document.getElementById('cComEvolucao');
+      if(ceEl)new Chart(ceEl,{type:'bar',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],datasets:[{label:'Total (€)',data:mv,backgroundColor:mv.map(v=>v>0?'rgba(99,102,241,.75)':'rgba(99,102,241,.15)'),borderColor:'#6366f1',borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc}},y:{grid:{color:gc},ticks:{color:tc}}}}});
+    },100)}
+  },
+
+  setPriceMode(mode){
+    const user=Auth.currentUser;
+    Storage.update('app_users',user.id,{priceMode:mode});Auth.currentUser.priceMode=mode;
+    Storage.get('app_users',[]).filter(u=>u.adminId===user.id).forEach(c=>Storage.update('app_users',c.id,{priceMode:mode}));
+    Toast.success(`Modo de preços alterado para ${mode.toUpperCase()} em toda a equipa.`);
+    this.dashAdmin();
+  },
+
+  /* --- ADMINS --- */
+  admins(){
+    App.setActivePage('admins','Administradores');
+    const users=Storage.get('app_users',[]);
+    const admins=users.filter(u=>u.role==='admin');
+    const coms=users.filter(u=>u.role==='comercial');
+    App.setContent(`
+<div class="page-header flex items-center justify-between">
+  <div><h1 class="page-title">Gestão de Administradores</h1><p class="page-subtitle">${admins.length} administrador${admins.length!==1?'es':''}</p></div>
+  <button class="btn btn-accent" onclick="Pages.openAdminModal()"><i class="fas fa-plus"></i> Novo Admin</button>
+</div>
+<div class="card">
+  <div class="table-wrapper">
+    <table class="data-table" id="tblAdmins">
+      <thead><tr><th>Administrador</th><th>Empresa</th><th>Comerciais</th><th>Preços</th><th>Estado</th><th>Último Login</th><th>Ações</th></tr></thead>
+      <tbody>
+        ${admins.map(a=>`<tr>
+          <td><div class="flex items-center gap-3"><div class="user-avatar ${Utils.avatarColor(a.name)}" style="width:34px;height:34px;font-size:.78rem">${Utils.initials(a.name)}</div><div><div class="col-name">${a.name}</div><div style="font-size:.75rem;color:var(--text-muted)">${a.email}</div></div></div></td>
+          <td>${a.company}</td>
+          <td><span class="badge badge-accent">${coms.filter(c=>c.adminId===a.id).length}</span></td>
+          <td><span class="badge badge-muted">${(a.priceMode||'pvp').toUpperCase()}</span></td>
+          <td><span class="badge ${a.status==='active'?'badge-success':'badge-danger'}">${a.status==='active'?'Ativo':'Suspenso'}</span></td>
+          <td>${Utils.formatDateTime(a.lastLogin)}</td>
+          <td><div class="flex gap-2">
+            <button class="btn btn-secondary btn-xs" onclick="Pages.openAdminModal('${a.id}')"><i class="fas fa-edit"></i></button>
+            <button class="btn ${a.status==='active'?'btn-warning':'btn-success'} btn-xs" onclick="Pages.toggleAdminStatus('${a.id}')"><i class="fas ${a.status==='active'?'fa-ban':'fa-check'}"></i></button>
+            <button class="btn btn-danger btn-xs" onclick="Pages.deleteAdmin('${a.id}')"><i class="fas fa-trash"></i></button>
+            <button class="btn btn-secondary btn-xs" onclick="Pages.resetPassword('${a.id}','admin')" title="Reset Password"><i class="fas fa-key"></i></button>
+            <button class="btn btn-secondary btn-xs" onclick="Pages.viewAdminComs('${a.id}')"><i class="fas fa-users"></i></button>
+          </div></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>`);
+    setTimeout(()=>{if($.fn.dataTable&&!$.fn.dataTable.isDataTable('#tblAdmins'))$('#tblAdmins').DataTable(this.dtOpts({order:[[0,'asc']]}))},100);
+  },
+
+  openAdminModal(adminId=null){
+    const users=Storage.get('app_users',[]);
+    const a=adminId?users.find(u=>u.id===adminId):null;
+    document.body.insertAdjacentHTML('beforeend',`
+<div class="modal-overlay" id="adminModal">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">${a?'Editar':'Novo'} Administrador</span><button class="modal-close" onclick="Pages.closeModal('adminModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-field"><label>Nome Completo *</label><input type="text" id="mAName" value="${a?.name||''}" placeholder="Nome do administrador"></div>
+        <div class="form-field"><label>Empresa *</label><input type="text" id="mACompany" value="${a?.company||''}" placeholder="Nome da empresa"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Email *</label><input type="email" id="mAEmail" value="${a?.email||''}" placeholder="email@empresa.pt"></div>
+        <div class="form-field"><label>${a?'Nova Password (opcional)':'Password *'}</label><input type="password" id="mAPass" placeholder="••••••••"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Modo de Preços</label><select id="mAPrice"><option value="pvp" ${(!a||a.priceMode==='pvp')?'selected':''}>PVP — Preço Público</option><option value="pvi" ${a?.priceMode==='pvi'?'selected':''}>PVI — Preço Instalador</option></select></div>
+        <div class="form-field"><label>Estado</label><select id="mAStatus"><option value="active" ${(!a||a.status==='active')?'selected':''}>Ativo</option><option value="suspended" ${a?.status==='suspended'?'selected':''}>Suspenso</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="Pages.closeModal('adminModal')">Cancelar</button><button class="btn btn-accent" onclick="Pages.saveAdmin('${adminId||''}')"><i class="fas fa-save"></i> Guardar</button></div>
+  </div>
+</div>`);
+  },
+
+  saveAdmin(adminId){
+    const name=document.getElementById('mAName').value.trim();
+    const company=document.getElementById('mACompany').value.trim();
+    const email=document.getElementById('mAEmail').value.trim();
+    const pass=document.getElementById('mAPass').value;
+    const priceMode=document.getElementById('mAPrice').value;
+    const status=document.getElementById('mAStatus').value;
+    if(!name||!company||!email){Toast.error('Preencha todos os campos obrigatórios.');return}
+    if(!adminId&&!pass){Toast.error('A password é obrigatória.');return}
+    const users=Storage.get('app_users',[]);
+    if(users.find(u=>u.email.toLowerCase()===email.toLowerCase()&&u.id!==adminId)){Toast.error('Este email já está em uso.');return}
+    if(adminId){
+      const upd={name,company,email,priceMode,status};if(pass)upd.password=pass;
+      Storage.update('app_users',adminId,upd);
+      users.filter(u=>u.adminId===adminId).forEach(c=>Storage.update('app_users',c.id,{priceMode}));
+      Toast.success('Administrador atualizado.');
+    }else{
+      Storage.push('app_users',{id:Utils.uuid(),name,company,email,password:pass,role:'admin',adminId:null,status,priceMode,lastLogin:null,lastActivity:null,isOnline:false,createdAt:new Date().toISOString()});
+      Toast.success('Administrador criado.');
+    }
+    this.closeModal('adminModal');this.admins();
+  },
+
+  toggleAdminStatus(id){
+    const users=Storage.get('app_users',[]);const a=users.find(u=>u.id===id);if(!a)return;
+    const ns=a.status==='active'?'suspended':'active';
+    Swal.fire({title:ns==='suspended'?'Suspender?':'Ativar?',icon:ns==='suspended'?'warning':'question',showCancelButton:true,confirmButtonText:ns==='suspended'?'Suspender':'Ativar',cancelButtonText:'Cancelar',confirmButtonColor:ns==='suspended'?'#ef4444':'#22c55e',...App.swalOpts()}).then(r=>{
+      if(r.isConfirmed){Storage.update('app_users',id,{status:ns});Toast.success(`Administrador ${ns==='active'?'ativado':'suspenso'}.`);this.admins()}
+    });
+  },
+
+  deleteAdmin(id){
+    Swal.fire({title:'Eliminar Administrador?',text:'Esta ação é irreversível. Os comerciais associados também serão removidos.',icon:'error',showCancelButton:true,confirmButtonText:'Eliminar',cancelButtonText:'Cancelar',confirmButtonColor:'#ef4444',...App.swalOpts()}).then(r=>{
+      if(r.isConfirmed){
+        const cids=Storage.get('app_users',[]).filter(u=>u.adminId===id).map(u=>u.id);
+        Storage.delete('app_users',id);
+        cids.forEach(cid=>Storage.delete('app_users',cid));
+        Toast.success('Administrador eliminado.');this.admins();
+      }
+    });
+  },
+
+  viewAdminComs(adminId){
+    const users=Storage.get('app_users',[]);
+    const admin=users.find(u=>u.id===adminId);
+    const coms=users.filter(u=>u.adminId===adminId);
+    document.body.insertAdjacentHTML('beforeend',`
+<div class="modal-overlay" id="acModal">
+  <div class="modal modal-lg">
+    <div class="modal-header"><span class="modal-title">Comerciais de ${admin?.name}</span><button class="modal-close" onclick="Pages.closeModal('acModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      ${coms.length===0?'<div class="empty-state"><i class="fas fa-users"></i><h3>Sem comerciais</h3></div>':coms.map(c=>`
+      <div class="user-list-item">
+        <div class="user-avatar ${Utils.avatarColor(c.name)}">${Utils.initials(c.name)}</div>
+        <div class="user-info"><div class="user-name">${c.name}</div><div class="user-meta">${c.email}</div></div>
+        <div style="text-align:right;font-size:.8rem;min-width:140px">
+          <div style="color:var(--text-muted)">Login: <strong>${Utils.timeAgo(c.lastLogin)}</strong></div>
+          <div style="color:var(--text-muted)">Atividade: <strong>${Utils.timeAgo(c.lastActivity)}</strong></div>
+        </div>
+        <span class="badge ${c.status==='active'?'badge-success':'badge-danger'}">${c.status==='active'?'Ativo':'Suspenso'}</span>
+      </div>`).join('')}
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="Pages.closeModal('acModal')">Fechar</button></div>
+  </div>
+</div>`);
+  },
+
+  /* --- COMERCIAIS --- */
+  myCommercials(){
+    App.setActivePage('myCommercials','Comerciais');
+    const user=Auth.currentUser;
+    const users=Storage.get('app_users',[]);
+    const coms=users.filter(u=>u.role==='comercial'&&u.adminId===user.id);
+    const budgets=Storage.get('app_budgets',[]);
+    App.setContent(`
+<div class="page-header flex items-center justify-between">
+  <div><h1 class="page-title">A Minha Equipa</h1><p class="page-subtitle">${coms.length} comercial${coms.length!==1?'is':''}</p></div>
+  <button class="btn btn-accent" onclick="Pages.openComModal()"><i class="fas fa-plus"></i> Novo Comercial</button>
+</div>
+<div class="card">
+  <div class="table-wrapper">
+    <table class="data-table" id="tblCom">
+      <thead><tr><th>Comercial</th><th>Orçamentos</th><th>Estado</th><th>Último Login</th><th>Última Atividade</th><th>Ações</th></tr></thead>
+      <tbody>
+        ${coms.map(c=>`<tr>
+          <td><div class="flex items-center gap-3"><div class="user-avatar ${Utils.avatarColor(c.name)}" style="width:34px;height:34px;font-size:.78rem">${Utils.initials(c.name)}</div><div><div class="col-name">${c.name}</div><div style="font-size:.75rem;color:var(--text-muted)">${c.email}</div></div></div></td>
+          <td><span class="badge badge-accent">${budgets.filter(b=>b.comercialId===c.id).length}</span></td>
+          <td><span class="badge ${c.status==='active'?'badge-success':'badge-danger'}">${c.status==='active'?'Ativo':'Suspenso'}</span></td>
+          <td>${Utils.formatDateTime(c.lastLogin)}</td>
+          <td>${Utils.formatDateTime(c.lastActivity)}</td>
+          <td><div class="flex gap-2">
+            <button class="btn btn-secondary btn-xs" onclick="Pages.openComModal('${c.id}')"><i class="fas fa-edit"></i></button>
+            <button class="btn ${c.status==='active'?'btn-warning':'btn-success'} btn-xs" onclick="Pages.toggleComStatus('${c.id}')"><i class="fas ${c.status==='active'?'fa-ban':'fa-check'}"></i></button>
+            <button class="btn btn-secondary btn-xs" onclick="Pages.resetPassword('${c.id}','comercial')" title="Reset Password"><i class="fas fa-key"></i></button>
+            <button class="btn btn-danger btn-xs" onclick="Pages.deleteCom('${c.id}')"><i class="fas fa-trash"></i></button>
+          </div></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>`);
+    setTimeout(()=>{if($.fn.dataTable&&!$.fn.dataTable.isDataTable('#tblCom'))$('#tblCom').DataTable(this.dtOpts({order:[[0,'asc']]}))},100);
+  },
+
+  allCommercials(){
+    App.setActivePage('allCommercials','Todos os Comerciais');
+    const users=Storage.get('app_users',[]);
+    const coms=users.filter(u=>u.role==='comercial');
+    const admins=users.filter(u=>u.role==='admin');
+    const budgets=Storage.get('app_budgets',[]);
+    App.setContent(`
+<div class="page-header"><h1 class="page-title">Todos os Comerciais</h1><p class="page-subtitle">${coms.length} comerciais no sistema</p></div>
+<div class="card">
+  <div class="table-wrapper">
+    <table class="data-table" id="tblAllCom">
+      <thead><tr><th>Comercial</th><th>Administrador</th><th>Empresa</th><th>Orçamentos</th><th>Estado</th><th>Último Login</th></tr></thead>
+      <tbody>
+        ${coms.map(c=>{const admin=admins.find(a=>a.id===c.adminId);return`<tr>
+          <td><div class="flex items-center gap-3"><div class="user-avatar ${Utils.avatarColor(c.name)}" style="width:34px;height:34px;font-size:.78rem">${Utils.initials(c.name)}</div><div><div class="col-name">${c.name}</div><div style="font-size:.75rem;color:var(--text-muted)">${c.email}</div></div></div></td>
+          <td>${admin?.name||'–'}</td><td>${c.company}</td>
+          <td><span class="badge badge-accent">${budgets.filter(b=>b.comercialId===c.id).length}</span></td>
+          <td><span class="badge ${c.status==='active'?'badge-success':'badge-danger'}">${c.status==='active'?'Ativo':'Suspenso'}</span></td>
+          <td>${Utils.formatDateTime(c.lastLogin)}</td>
+        </tr>`}).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>`);
+    setTimeout(()=>{if($.fn.dataTable&&!$.fn.dataTable.isDataTable('#tblAllCom'))$('#tblAllCom').DataTable(this.dtOpts({order:[[0,'asc']]}))},100);
+  },
+
+  openComModal(comId=null){
+    const users=Storage.get('app_users',[]);
+    const c=comId?users.find(u=>u.id===comId):null;
+    document.body.insertAdjacentHTML('beforeend',`
+<div class="modal-overlay" id="comModal">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">${c?'Editar':'Novo'} Comercial</span><button class="modal-close" onclick="Pages.closeModal('comModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-field"><label>Nome Completo *</label><input type="text" id="mCName" value="${c?.name||''}" placeholder="Nome do comercial"></div>
+        <div class="form-field"><label>Email *</label><input type="email" id="mCEmail" value="${c?.email||''}" placeholder="email@empresa.pt"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>${c?'Nova Password (opcional)':'Password *'}</label><input type="password" id="mCPass" placeholder="••••••••"></div>
+        <div class="form-field"><label>Estado</label><select id="mCStatus"><option value="active" ${(!c||c.status==='active')?'selected':''}>Ativo</option><option value="suspended" ${c?.status==='suspended'?'selected':''}>Suspenso</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="Pages.closeModal('comModal')">Cancelar</button><button class="btn btn-accent" onclick="Pages.saveCom('${comId||''}')"><i class="fas fa-save"></i> Guardar</button></div>
+  </div>
+</div>`);
+  },
+
+  saveCom(comId){
+    const name=document.getElementById('mCName').value.trim();
+    const email=document.getElementById('mCEmail').value.trim();
+    const pass=document.getElementById('mCPass').value;
+    const status=document.getElementById('mCStatus').value;
+    const adminUser=Auth.currentUser;
+    if(!name||!email){Toast.error('Preencha todos os campos obrigatórios.');return}
+    if(!comId&&!pass){Toast.error('A password é obrigatória.');return}
+    const users=Storage.get('app_users',[]);
+    if(users.find(u=>u.email.toLowerCase()===email.toLowerCase()&&u.id!==comId)){Toast.error('Este email já está em uso.');return}
+    if(comId){
+      const upd={name,email,status};if(pass)upd.password=pass;
+      Storage.update('app_users',comId,upd);Toast.success('Comercial atualizado.');
+    }else{
+      Storage.push('app_users',{id:Utils.uuid(),name,email,password:pass,role:'comercial',company:adminUser.company,adminId:adminUser.id,status,priceMode:adminUser.priceMode||'pvp',lastLogin:null,lastActivity:null,isOnline:false,createdAt:new Date().toISOString()});
+      Toast.success('Comercial criado.');
+    }
+    this.closeModal('comModal');this.myCommercials();
+  },
+
+  toggleComStatus(id){
+    const c=Storage.get('app_users',[]).find(u=>u.id===id);if(!c)return;
+    const ns=c.status==='active'?'suspended':'active';
+    Storage.update('app_users',id,{status:ns});
+    Toast.success(`Comercial ${ns==='active'?'ativado':'suspenso'}.`);this.myCommercials();
+  },
+
+  deleteCom(id){
+    Swal.fire({title:'Eliminar Comercial?',text:'Esta ação é irreversível.',icon:'error',showCancelButton:true,confirmButtonText:'Eliminar',cancelButtonText:'Cancelar',confirmButtonColor:'#ef4444',...App.swalOpts()}).then(r=>{
+      if(r.isConfirmed){Storage.delete('app_users',id);Toast.success('Comercial eliminado.');this.myCommercials()}
+    });
+  },
+
+  /* --- PRODUTOS --- */
+  products(){
+    App.setActivePage('products','Catálogo de Produtos');
+    const prods=Products.getAll();
+    const cats={modulo:'Módulo de Extensão',monitor:'Monitor',monitor_wifi:'Monitor Wi-Fi',placa:'Placa Exterior',distribuidor:'Distribuidor',distribuidor_patamar:'Dist. Patamar',fonte:'Fonte Alimentação',rele:'Módulo Relé',acessorio:'Acessório'};
+    App.setContent(`
+<div class="page-header flex items-center justify-between">
+  <div><h1 class="page-title">Catálogo de Produtos</h1><p class="page-subtitle">${prods.length} produtos · Preços <strong>PVP</strong> (o comercial aplica desconto na proposta)</p></div>
+</div>
+<div class="filter-bar">
+  <div class="search-bar" style="flex:1;max-width:320px"><i class="fas fa-search"></i><input type="text" id="prodSearch" placeholder="Pesquisar referência ou descrição…" oninput="Pages.filterProds()"></div>
+  <button class="filter-chip active" data-cat="all" onclick="Pages.filterProdCat('all',this)">Todos</button>
+  ${Object.entries(cats).map(([k,v])=>`<button class="filter-chip" data-cat="${k}" onclick="Pages.filterProdCat('${k}',this)">${v}</button>`).join('')}
+</div>
+<div class="grid grid-4" id="prodsGrid" style="gap:14px">
+  ${prods.map(p=>`
+  <div class="product-catalog-card" data-cat="${p.category}" data-q="${(p.ref+' '+p.description).toLowerCase()}" onclick="Pages.showProductDetail('${p.id}')" style="cursor:pointer">
+    <div class="pc-img"><img src="${p.image}" alt="${p.ref}" onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:110px;color:var(--text-muted);font-size:.72rem;text-align:center;padding:8px\\'>${p.ref}</div>'"></div>
+    <div class="pc-body">
+      <div class="pc-ref">${p.ref}</div>
+      <div class="pc-name">${p.description.split('.')[0]}</div>
+      <div class="pc-cat">${cats[p.category]||p.category}</div>
+      <div class="pc-prices">
+        <div class="pc-pvp">${Utils.formatCurrency(p.pvp)}</div>
+        <div class="pc-pvi">PVI: ${Utils.formatCurrency(p.pvi)}</div>
+      </div>
+    </div>
+  </div>`).join('')}
+</div>`);
+  },
+  filterProds(){
+    const q=document.getElementById('prodSearch').value.toLowerCase();
+    document.querySelectorAll('.product-catalog-card').forEach(c=>{c.style.display=c.dataset.q.includes(q)?'':'none'});
+  },
+  filterProdCat(cat,btn){
+    document.querySelectorAll('.filter-chip').forEach(el=>el.classList.remove('active'));btn.classList.add('active');
+    document.querySelectorAll('.product-catalog-card').forEach(c=>{c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none'});
+  },
+  showProductDetail(productId){
+    const p=Products.getAll().find(pr=>pr.id===productId);if(!p)return;
+    const user=Auth.currentUser;
+    const adminUser=user.role==='comercial'?Storage.get('app_users',[]).find(u=>u.id===user.adminId):user;
+    const pm=adminUser?.priceMode||user.priceMode||'pvp';
+    const catLabel=this.catLabel(p.category);
+    document.body.insertAdjacentHTML('beforeend',`
+<div class="modal-overlay" id="prodDetailModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <span class="modal-title">${p.ref}</span>
+      <button class="modal-close" onclick="Pages.closeModal('prodDetailModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="flex gap-4" style="flex-wrap:wrap">
+        <div style="flex:0 0 200px;background:var(--bg-elevated);border-radius:var(--radius-md);padding:20px;display:flex;align-items:center;justify-content:center">
+          <img src="${p.image}" alt="${p.ref}" style="max-height:160px;object-fit:contain" onerror="this.parentElement.innerHTML='<div style=\\'color:var(--text-muted);font-size:.8rem;text-align:center\\'>${p.ref}</div>'">
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent);margin-bottom:6px">${p.ref}</div>
+          <div style="font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:8px">${p.description.split('.')[0]}</div>
+          <span class="badge badge-muted" style="margin-bottom:16px">${catLabel}</span>
+          <div style="font-size:.85rem;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">${p.description}</div>
+          ${p.notes?`<div class="alert alert-info" style="margin-bottom:12px"><i class="fas fa-info-circle"></i><div>${p.notes}</div></div>`:''}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+            <div style="background:var(--bg-elevated);border-radius:var(--radius-md);padding:14px;text-align:center">
+              <div style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">PVP</div>
+              <div style="font-size:1.4rem;font-weight:700;color:${pm==='pvp'?'var(--accent)':'var(--text-primary)'}">${Utils.formatCurrency(p.pvp)}</div>
+              ${pm==='pvp'?'<div style="font-size:.7rem;color:var(--accent);margin-top:2px">Modo ativo</div>':''}
+            </div>
+            <div style="background:var(--bg-elevated);border-radius:var(--radius-md);padding:14px;text-align:center">
+              <div style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">PVI</div>
+              <div style="font-size:1.4rem;font-weight:700;color:${pm==='pvi'?'var(--accent)':'var(--text-primary)'}">${Utils.formatCurrency(p.pvi)}</div>
+              ${pm==='pvi'?'<div style="font-size:.7rem;color:var(--accent);margin-top:2px">Modo ativo</div>':''}
+            </div>
+          </div>
+          <div style="margin-top:12px;padding:10px;background:var(--bg-elevated);border-radius:var(--radius-sm);font-size:.8rem;color:var(--text-muted)">
+            <i class="fas fa-tag" style="color:var(--accent);margin-right:6px"></i>
+            Margem: <strong style="color:var(--text-primary)">${Math.round((1-p.pvi/p.pvp)*100)}%</strong> &nbsp;·&nbsp;
+            Diferença: <strong style="color:var(--text-primary)">${Utils.formatCurrency(p.pvp-p.pvi)}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Pages.closeModal('prodDetailModal')">Fechar</button>
+      <button class="btn btn-secondary" onclick="Pages.printProductSheet('${p.id}')"><i class="fas fa-print"></i> Imprimir Ficha</button>
+    </div>
+  </div>
+</div>`);
+  },
+
+  /* --- ORÇAMENTOS --- */
+  myBudgets(){
+    App.setActivePage('myBudgets','Os Meus Orçamentos');
+    const user=Auth.currentUser;
+    this.renderBudgetList(Storage.get('app_budgets',[]).filter(b=>b.comercialId===user.id),'Os Meus Orçamentos',true);
+  },
+  adminBudgets(){
+    App.setActivePage('adminBudgets','Orçamentos');
+    const user=Auth.currentUser;
+    this.renderBudgetList(Storage.get('app_budgets',[]).filter(b=>b.adminId===user.id),'Orçamentos da Equipa',false);
+  },
+  allBudgets(){
+    App.setActivePage('allBudgets','Todos os Orçamentos');
+    this.renderBudgetList(Storage.get('app_budgets',[]),'Todos os Orçamentos',false);
+  },
+
+  renderBudgetList(budgets,title,canDelete){
+    const users=Storage.get('app_users',[]);
+    App.setContent(`
+<div class="page-header flex items-center justify-between">
+  <div><h1 class="page-title">${title}</h1><p class="page-subtitle">${budgets.length} orçamento${budgets.length!==1?'s':''}</p></div>
+  <div class="flex gap-2">
+    <button class="btn btn-secondary" onclick="Pages.exportBudgetsCSV()" title="Exportar lista para CSV"><i class="fas fa-file-csv"></i> CSV</button>
+    ${canDelete?'<button class="btn btn-accent" onclick="Pages.newBudget()"><i class="fas fa-plus"></i> Novo Orçamento</button>':''}
+  </div>
+</div>
+<div class="card">
+  <div class="filter-bar">
+    <div class="search-bar" style="flex:1;max-width:280px"><i class="fas fa-search"></i><input type="text" id="bSearch" placeholder="Pesquisar cliente…" oninput="Pages.filterBudgets()"></div>
+    <button class="filter-chip active" data-s="all" onclick="Pages.filterBudgetStatus('all',this)">Todos</button>
+    <button class="filter-chip" data-s="draft" onclick="Pages.filterBudgetStatus('draft',this)">Rascunho</button>
+    <button class="filter-chip" data-s="sent" onclick="Pages.filterBudgetStatus('sent',this)">Enviados</button>
+    <button class="filter-chip" data-s="approved" onclick="Pages.filterBudgetStatus('approved',this)">Aprovados</button>
+  </div>
+  ${budgets.length===0?'<div class="empty-state"><i class="fas fa-file-invoice"></i><h3>Sem orçamentos</h3></div>':''}
+  <div id="bList">
+    ${budgets.map(b=>{const com=users.find(u=>u.id===b.comercialId);return`
+    <div class="budget-card" data-s="${b.status}" data-c="${(b.clientName||'').toLowerCase()}">
+      <div class="budget-icon"><i class="fas fa-file-invoice"></i></div>
+      <div class="budget-info">
+        <div class="budget-id">#${b.id.slice(0,8).toUpperCase()}</div>
+        <div class="budget-client">${b.clientName||'Cliente sem nome'}</div>
+        <div class="budget-meta">${b.fractions} frações · ${b.totalMonitors} monitores · ${b.hasWifi?'Com Wi-Fi':'Sem Wi-Fi'}${com?` · ${com.name}`:''} · ${Utils.formatDate(b.createdAt)}</div>
+      </div>
+      <div class="budget-value"><div class="budget-amount">${Utils.formatCurrency(b.totals?.total)}</div><span class="badge ${this.statusBadge(b.status)}">${this.statusLabel(b.status)}</span></div>
+      <div class="flex gap-2" style="flex-shrink:0">
+        <button class="btn btn-secondary btn-xs" onclick="Pages.duplicateBudget('${b.id}')"><i class="fas fa-copy"></i></button>
+        <button class="btn btn-accent btn-xs" onclick="Pages.exportBudgetPDF('${b.id}')"><i class="fas fa-file-pdf"></i></button>
+        <button class="btn btn-secondary btn-xs" onclick="Pages.changeStatus('${b.id}')" title="Alterar estado"><i class="fas fa-tag"></i></button>
+        ${canDelete?`<button class="btn btn-danger btn-xs" onclick="Pages.deleteBudget('${b.id}')"><i class="fas fa-trash"></i></button>`:''}
+      </div>
+    </div>`}).join('')}
+  </div>
+</div>`);
+  },
+  filterBudgets(){
+    const q=document.getElementById('bSearch')?.value.toLowerCase()||'';
+    document.querySelectorAll('.budget-card').forEach(c=>{c.style.display=c.dataset.c.includes(q)?'':'none'});
+  },
+  filterBudgetStatus(s,btn){
+    document.querySelectorAll('.filter-chip[data-s]').forEach(el=>el.classList.remove('active'));btn.classList.add('active');
+    document.querySelectorAll('.budget-card').forEach(c=>{c.style.display=(s==='all'||c.dataset.s===s)?'':'none'});
+  },
+  duplicateBudget(id){
+    const b=Storage.get('app_budgets',[]).find(b=>b.id===id);if(!b)return;
+    const dup=Utils.deepClone(b);dup.id=Utils.uuid();dup.status='draft';dup.clientName=b.clientName+' (Cópia)';dup.createdAt=new Date().toISOString();dup.updatedAt=new Date().toISOString();
+    Storage.push('app_budgets',dup);Toast.success('Orçamento duplicado.');
+    Auth.currentUser.role==='comercial'?this.myBudgets():this.adminBudgets();
+  },
+  changeStatus(id){
+    const b=Storage.get('app_budgets',[]).find(b=>b.id===id);if(!b)return;
+    const statuses={draft:'Rascunho',sent:'Enviado',approved:'Aprovado',rejected:'Rejeitado'};
+    const icons={draft:'fa-file',sent:'fa-paper-plane',approved:'fa-check-circle',rejected:'fa-times-circle'};
+    const colors={draft:'#94a3b8',sent:'#3b82f6',approved:'#22c55e',rejected:'#ef4444'};
+    Swal.fire({
+      title:'Alterar Estado do Orçamento',
+      html:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+        ${Object.entries(statuses).map(([k,v])=>`
+        <button onclick="document.getElementById('chosenStatus').value='${k}';document.querySelectorAll('.status-opt').forEach(el=>el.style.opacity='.5');this.style.opacity='1';this.style.borderColor='${colors[k]}'"
+          class="status-opt" style="padding:12px;border:2px solid ${b.status===k?colors[k]:'var(--border, #333)'};border-radius:8px;background:none;color:inherit;cursor:pointer;opacity:${b.status===k?'1':'.6'};transition:all .2s">
+          <i class="fas ${icons[k]}" style="color:${colors[k]};font-size:18px;display:block;margin-bottom:6px"></i>
+          <span style="font-size:.85rem;font-weight:600">${v}</span>
+        </button>`).join('')}
+      </div>
+      <input type="hidden" id="chosenStatus" value="${b.status}">`,
+      showCancelButton:true,confirmButtonText:'Guardar',cancelButtonText:'Cancelar',
+      confirmButtonColor:'#6366f1',...App.swalOpts()
+    }).then(r=>{
+      if(r.isConfirmed){
+        const ns=document.getElementById('chosenStatus')?.value||b.status;
+        Storage.update('app_budgets',id,{status:ns,updatedAt:new Date().toISOString()});
+        Toast.success(`Estado alterado para "${statuses[ns]}".`);
+        const user=Auth.currentUser;
+        if(user.role==='comercial')this.myBudgets();
+        else if(user.role==='admin')this.adminBudgets();
+        else this.allBudgets();
+      }
+    });
+  },
+  deleteBudget(id){
+    Swal.fire({title:'Eliminar Orçamento?',text:'Esta ação é irreversível.',icon:'warning',showCancelButton:true,confirmButtonText:'Eliminar',cancelButtonText:'Cancelar',confirmButtonColor:'#ef4444',...App.swalOpts()}).then(r=>{
+      if(r.isConfirmed){Storage.delete('app_budgets',id);Toast.success('Orçamento eliminado.');this.myBudgets()}
+    });
+  },
+
+  exportBudgetsCSV(){
+    const user=Auth.currentUser;
+    let budgets=Storage.get('app_budgets',[]);
+    if(user.role==='comercial')budgets=budgets.filter(b=>b.comercialId===user.id);
+    else if(user.role==='admin')budgets=budgets.filter(b=>b.adminId===user.id);
+    const users=Storage.get('app_users',[]);
+    const headers=['ID','Cliente','Email','Comercial','Frações','Monitores','Wi-Fi','Preços','Estado','Subtotal','IVA','Total','Data'];
+    const rows=budgets.map(b=>{
+      const com=users.find(u=>u.id===b.comercialId);
+      return [
+        b.id.slice(0,8).toUpperCase(),
+        `"${b.clientName||''}"`,
+        `"${b.clientEmail||''}"`,
+        `"${com?.name||''}"`,
+        b.fractions,b.totalMonitors,
+        b.hasWifi?'Sim':'Não',
+        (b.priceMode||'pvp').toUpperCase(),
+        {draft:'Rascunho',sent:'Enviado',approved:'Aprovado',rejected:'Rejeitado'}[b.status]||b.status,
+        (b.totals?.subtotal||0).toFixed(2),
+        (b.totals?.iva||0).toFixed(2),
+        (b.totals?.total||0).toFixed(2),
+        Utils.formatDate(b.createdAt)
+      ].join(';');
+    });
+    const csv='\uFEFF'+[headers.join(';'),...rows].join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=`orcamentos_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+    Toast.success(`${budgets.length} orçamento${budgets.length!==1?'s':''} exportado${budgets.length!==1?'s':''} para CSV.`);
+  },
+  exportBudgetPDF(id){
+    const b=Storage.get('app_budgets',[]).find(b=>b.id===id);
+    if(!b){Toast.error('Orçamento não encontrado.');return}
+    const{jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    // Header com logo visual
+    doc.setFillColor(99,102,241);doc.rect(0,0,210,32,'F');
+    doc.setFillColor(79,82,221);doc.rect(0,0,55,32,'F');
+    // Ícone calculadora
+    doc.setFillColor(255,255,255);doc.roundedRect(8,7,18,18,3,3,'F');
+    doc.setFillColor(99,102,241);
+    doc.rect(11,10,5,3,'F');doc.rect(18,10,5,3,'F');
+    doc.rect(11,15,5,3,'F');doc.rect(18,15,5,3,'F');
+    doc.rect(11,20,12,3,'F');
+    // Texto logo
+    doc.setFontSize(14);doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.text('VISIOTECH',30,14);
+    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(200,200,255);doc.text('CALC',30,21);
+    doc.setFontSize(8);doc.text('Sistema de Orçamentos',30,27);
+    // Tipo e número
+    doc.setFontSize(13);doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.text('ORÇAMENTO',155,13);
+    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(200,200,255);doc.text(`#${b.id.slice(0,8).toUpperCase()}`,160,20);doc.text(Utils.formatDate(b.createdAt),159,26);
+    doc.setTextColor(15,23,42);doc.setFontSize(11);doc.setFont('helvetica','bold');doc.text('Cliente',15,47);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(b.clientName||'–',15,54);if(b.clientEmail)doc.text(b.clientEmail,15,60);
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text('Instalação',120,47);doc.setFont('helvetica','normal');doc.setFontSize(9);
+    doc.text(`Frações: ${b.fractions}`,120,54);doc.text(`Monitores: ${b.totalMonitors}`,120,59);doc.text(`Wi-Fi: ${b.hasWifi?'Sim':'Não'}`,120,64);doc.text(`Preços: PVP (desconto a acordar)`,120,69);
+    doc.setDrawColor(230,230,230);doc.line(15,75,195,75);
+    const rows=(b.items||[]).map(item=>[item.ref,(item.description?item.description.split('.')[0].substring(0,45):'–'),String(item.qty),Utils.formatCurrency(item.unitPrice),Utils.formatCurrency(item.subtotal)]);
+    if(rows.length===0)rows.push(['–','Orçamento sem itens detalhados','–','–',Utils.formatCurrency(b.totals?.subtotal||0)]);
+    doc.autoTable({startY:80,head:[['Referência','Descrição','Qtd','P. Unit.','Subtotal']],body:rows,styles:{fontSize:9,cellPadding:3},headStyles:{fillColor:[99,102,241],textColor:255,fontStyle:'bold'},columnStyles:{0:{cellWidth:36},1:{cellWidth:78},2:{cellWidth:15,halign:'center'},3:{cellWidth:28,halign:'right'},4:{cellWidth:28,halign:'right'}},alternateRowStyles:{fillColor:[248,250,252]}});
+    const fy=doc.lastAutoTable?.finalY||80;
+    doc.setFillColor(248,250,252);doc.rect(120,fy+8,75,36,'F');doc.setDrawColor(230,230,230);doc.rect(120,fy+8,75,36,'S');
+    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);doc.text('Subtotal:',125,fy+18);doc.text('IVA (23%):',125,fy+25);
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(15,23,42);doc.text('TOTAL:',125,fy+36);
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(71,85,105);doc.text(Utils.formatCurrency(b.totals?.subtotal),190,fy+18,{align:'right'});doc.text(Utils.formatCurrency(b.totals?.iva),190,fy+25,{align:'right'});
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(99,102,241);doc.text(Utils.formatCurrency(b.totals?.total),190,fy+36,{align:'right'});
+    doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(148,163,184);doc.text('Visiotech Calc — Sistema de Orçamentos Profissional',105,287,{align:'center'});doc.text(`Gerado em ${Utils.formatDateTime(new Date().toISOString())}`,105,292,{align:'center'});
+    doc.save(`Orcamento_${(b.clientName||'sem_nome').replace(/\s/g,'_')}_${b.id.slice(0,8)}.pdf`);
+    Toast.success('PDF exportado com sucesso!');
+  },
+
+  /* --- PERFIL --- */
+  openProfileModal(){
+    const user=Auth.currentUser;
+    const roleLabel={superadmin:'Super Admin',admin:'Administrador',comercial:'Comercial'}[user.role]||user.role;
+    document.body.insertAdjacentHTML('beforeend',`
+<div class="modal-overlay" id="profileModal">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">O Meu Perfil</span><button class="modal-close" onclick="Pages.closeModal('profileModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="flex items-center gap-4" style="margin-bottom:20px">
+        <div class="sidebar-avatar" style="width:56px;height:56px;font-size:1.2rem">${Utils.initials(user.name)}</div>
+        <div><div style="font-size:1rem;font-weight:700">${user.name}</div><div style="color:var(--text-secondary);font-size:.85rem">${user.email}</div><span class="badge badge-accent" style="margin-top:4px">${roleLabel}</span></div>
+      </div>
+      <div class="form-field"><label>Nome Completo</label><input type="text" id="pName" value="${user.name}"></div>
+      <div class="form-row">
+        <div class="form-field"><label>Email</label><input type="email" id="pEmail" value="${user.email}"></div>
+        <div class="form-field"><label>Empresa</label><input type="text" id="pCompany" value="${user.company||''}" ${user.role==='comercial'?'placeholder="Nome da empresa"':''}></div>
+      </div>
+      <div class="form-field"><label>Nova Password (deixe em branco para manter)</label><input type="password" id="pPass" placeholder="••••••••"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="Auth.logout()"><i class="fas fa-right-from-bracket"></i> Terminar Sessão</button>
+      <button class="btn btn-secondary" onclick="Pages.closeModal('profileModal')">Cancelar</button>
+      <button class="btn btn-accent" onclick="Pages.saveProfile()"><i class="fas fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</div>`);
+  },
+
+  resetPassword(userId,role){
+    Swal.fire({
+      title:'Definir Nova Password',
+      input:'password',
+      inputLabel:'Nova password para este utilizador',
+      inputPlaceholder:'Mínimo 6 caracteres',
+      inputAttributes:{minlength:6,autocomplete:'new-password'},
+      showCancelButton:true,confirmButtonText:'Guardar',cancelButtonText:'Cancelar',
+      confirmButtonColor:'#6366f1',...App.swalOpts(),
+      preConfirm:(pass)=>{if(!pass||pass.length<6){Swal.showValidationMessage('A password deve ter pelo menos 6 caracteres');return false}return pass}
+    }).then(r=>{
+      if(r.isConfirmed&&r.value){
+        Storage.update('app_users',userId,{password:r.value});
+        Toast.success('Password atualizada com sucesso.');
+      }
+    });
+  },
+  saveProfile(){
+    const user=Auth.currentUser;
+    const name=document.getElementById('pName').value.trim();
+    const email=document.getElementById('pEmail').value.trim();
+    const company=document.getElementById('pCompany')?.value.trim()||user.company||'';
+    const pass=document.getElementById('pPass').value;
+    if(!name||!email){Toast.error('Preencha os campos obrigatórios.');return}
+    const upd={name,email,company};if(pass)upd.password=pass;
+    Storage.update('app_users',user.id,upd);
+    Auth.currentUser={...user,...upd};
+    App.updateNavbar();App.buildSidebar();
+    this.closeModal('profileModal');Toast.success('Perfil atualizado com sucesso.');
+  },
+
+  newBudget(){Wizard.open()},
+
+  printProductSheet(productId){
+    const p=Products.getAll().find(pr=>pr.id===productId);if(!p)return;
+    const user=Auth.currentUser;
+    const adminUser=user.role==='comercial'?Storage.get('app_users',[]).find(u=>u.id===user.adminId):user;
+    const pm=adminUser?.priceMode||user.priceMode||'pvp';
+    const catLabel=this.catLabel(p.category);
+    const win=window.open('','_blank');
+    win.document.write(`<!DOCTYPE html><html lang="pt-PT"><head><meta charset="UTF-8"><title>Ficha de Produto — ${p.ref}</title>
+<style>
+body{font-family:Arial,sans-serif;margin:30px;color:#333;font-size:13px}
+.header{background:#6366f1;color:#fff;padding:20px 24px;border-radius:8px;margin-bottom:24px;display:flex;align-items:center;gap:20px}
+.header h1{font-size:20px;margin:0}.header p{font-size:11px;opacity:.8;margin:4px 0 0}
+.ref{font-family:monospace;font-size:11px;background:rgba(255,255,255,.2);padding:3px 8px;border-radius:4px;margin-top:6px;display:inline-block}
+.body{display:grid;grid-template-columns:220px 1fr;gap:24px}
+.img-box{background:#f8f9fa;border:1px solid #eee;border-radius:8px;padding:16px;text-align:center}
+.img-box img{max-width:180px;max-height:180px;object-fit:contain}
+.info h2{font-size:15px;margin-bottom:8px;color:#111}
+.desc{color:#555;line-height:1.7;margin-bottom:16px}
+.prices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.price-box{border:1px solid #eee;border-radius:6px;padding:12px;text-align:center}
+.price-box.active{border-color:#6366f1;background:#f0f1ff}
+.price-label{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.price-val{font-size:20px;font-weight:700;color:#111}
+.price-box.active .price-val{color:#6366f1}
+.active-tag{font-size:10px;color:#6366f1;margin-top:3px}
+.meta{display:flex;gap:12px;flex-wrap:wrap}
+.meta-item{background:#f8f9fa;padding:6px 12px;border-radius:20px;font-size:11px;color:#555}
+.notes{background:#fff8e1;border:1px solid #ffd54f;border-radius:6px;padding:10px 14px;font-size:12px;margin-top:12px}
+footer{margin-top:30px;border-top:1px solid #eee;padding-top:10px;text-align:center;color:#aaa;font-size:10px}
+@media print{@page{margin:15mm}body{margin:0}}
+</style></head><body>
+<div class="header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="background:rgba(255,255,255,.15);border-radius:6px;padding:8px 10px">
+      <svg width="20" height="20" viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="3" rx="1" fill="white"/><rect x="8" y="1" width="5" height="3" rx="1" fill="white"/><rect x="1" y="6" width="5" height="3" rx="1" fill="white"/><rect x="8" y="6" width="5" height="3" rx="1" fill="white"/><rect x="1" y="11" width="12" height="2" rx="1" fill="white"/></svg>
+    </div>
+    <div>
+      <h1>VISIOTECH <span style="opacity:.7">CALC</span></h1>
+      <p>Ficha de Produto</p>
+    </div>
+  </div>
+  <div style="margin-left:auto;text-align:right">
+    <div style="font-size:16px;font-weight:700">${p.ref}</div>
+    <div style="font-size:11px;opacity:.8">${catLabel}</div>
+  </div>
+</div>
+<div class="body">
+  <div class="img-box">
+    <img src="${p.image}" alt="${p.ref}" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='">
+    <div style="font-family:monospace;font-size:11px;color:#6366f1;margin-top:10px">${p.ref}</div>
+  </div>
+  <div class="info">
+    <h2>${p.description.split('.')[0]}</h2>
+    <div class="desc">${p.description}</div>
+    <div class="prices">
+      <div class="price-box ${pm==='pvp'?'active':''}">
+        <div class="price-label">PVP</div>
+        <div class="price-val">${Utils.formatCurrency(p.pvp)}</div>
+        ${pm==='pvp'?'<div class="active-tag">Modo ativo</div>':''}
+      </div>
+      <div class="price-box ${pm==='pvi'?'active':''}">
+        <div class="price-label">PVI</div>
+        <div class="price-val">${Utils.formatCurrency(p.pvi)}</div>
+        ${pm==='pvi'?'<div class="active-tag">Modo ativo</div>':''}
+      </div>
+    </div>
+    <div class="meta">
+      <span class="meta-item"><strong>Marca:</strong> ${p.brand}</span>
+      <span class="meta-item"><strong>Categoria:</strong> ${catLabel}</span>
+      <span class="meta-item"><strong>Margem:</strong> ${Math.round((1-p.pvi/p.pvp)*100)}%</span>
+    </div>
+    ${p.notes?`<div class="notes"><strong>Nota:</strong> ${p.notes}</div>`:''}
+  </div>
+</div>
+<footer>Visiotech Calc — Ficha gerada em ${Utils.formatDateTime(new Date().toISOString())}</footer>
+</body></html>`);
+    win.document.close();setTimeout(()=>win.print(),400);
+  },
+
+  showNotifications(){
+    const user=Auth.currentUser;
+    const activity=Storage.get('app_activity',[]).slice().reverse().slice(0,15);
+    const relevant=user.role==='superadmin'?activity:activity.filter(a=>{
+      const users=Storage.get('app_users',[]);
+      const actor=users.find(u=>u.id===a.userId);
+      if(user.role==='admin')return actor&&(actor.adminId===user.id||actor.id===user.id);
+      return a.userId===user.id;
+    });
+    document.body.insertAdjacentHTML('beforeend',`
+<div class="modal-overlay" id="notifModal">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title"><i class="fas fa-bell" style="color:var(--accent);margin-right:8px"></i>Notificações Recentes</span><button class="modal-close" onclick="Pages.closeModal('notifModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body" style="padding:8px 0">
+      ${relevant.length===0?'<div class="empty-state" style="padding:30px"><i class="fas fa-bell-slash"></i><h3>Sem notificações</h3></div>':relevant.map(a=>`
+      <div class="activity-item" style="padding:12px 20px">
+        <div class="activity-dot" style="background:${a.color}"></div>
+        <div class="activity-content">
+          <div class="activity-text"><strong>${a.userName}</strong> — ${a.detail}</div>
+          <div class="activity-time">${Utils.formatDateTime(a.timestamp)}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="Pages.closeModal('notifModal')">Fechar</button></div>
+  </div>
+</div>`);
+    const dot=document.getElementById('bellDot');if(dot)dot.style.display='none';
+  },
+
+  updateBellDot(){
+    const dot=document.getElementById('bellDot');if(!dot)return;
+    const activity=Storage.get('app_activity',[]);
+    const lastSeen=Storage.get('app_last_notif_seen',0);
+    const hasNew=activity.some(a=>new Date(a.timestamp).getTime()>lastSeen);
+    dot.style.display=hasNew?'block':'none';
+    Storage.set('app_last_notif_seen',Date.now());
+  },
+};
+/* === WIZARD === */
+const Wizard={
+  state:{step:1,totalSteps:9,fractions:1,monitorsPerFraction:null,totalMonitors:1,hasWifi:null,selectedPlaca:null,selectedModulos:[],autoItems:[],selectedMonitor:null,clientName:'',clientEmail:'',items:[]},
+  stepNames:['Frações','Monitores Extra','Total Monitores','Wi-Fi','Placa Exterior','Módulos','Acessórios Auto','Monitores','Resumo Final'],
+
+  open(){
+    this.state={step:1,totalSteps:9,fractions:1,monitorsPerFraction:null,totalMonitors:1,hasWifi:null,selectedPlaca:null,selectedModulos:[],autoItems:[],selectedMonitor:null,clientName:'',clientEmail:'',items:[]};
+    document.getElementById('wizard-overlay').classList.add('active');
+    this.renderProgress();this.renderStep();
+  },
+
+  close(){
+    Swal.fire({title:'Abandonar orçamento?',text:'Todo o progresso será perdido.',icon:'warning',showCancelButton:true,confirmButtonText:'Abandonar',cancelButtonText:'Continuar',confirmButtonColor:'#ef4444',...App.swalOpts()}).then(r=>{if(r.isConfirmed)document.getElementById('wizard-overlay').classList.remove('active')});
+  },
+
+  renderProgress(){
+    const s=this.state;
+    const pct=((s.step-1)/(s.totalSteps-1))*100;
+    document.getElementById('wizardProgressFill').style.width=pct+'%';
+    document.getElementById('wizardStepLabels').innerHTML=this.stepNames.map((n,i)=>{const idx=i+1;const cls=idx<s.step?'done':idx===s.step?'active':'';return`<div class="wizard-step-label ${cls}">${n}</div>`}).join('');
+    document.getElementById('wizardDots').innerHTML=this.stepNames.map((_,i)=>{const idx=i+1;const cls=idx<s.step?'done':idx===s.step?'active':'';return`<div class="wizard-step-dot ${cls}"></div>`}).join('');
+  },
+
+  next(){
+    if(!this.validateStep())return;
+    if(this.state.step<this.state.totalSteps){
+      this.state.step++;
+      // Skip step 3 (total monitors) when step 2 = "Não" (auto-filled already)
+      if(this.state.step===3&&this.state.monitorsPerFraction===false){
+        this.state.step=4; // jump to WiFi
+      }
+      if(this.state.step===7)this.computeAutoItems();
+      this.renderProgress();this.renderStep();
+    }
+  },
+  prev(){
+    if(this.state.step>1){
+      this.state.step--;
+      // Skip step 3 going back when "Não" was selected
+      if(this.state.step===3&&this.state.monitorsPerFraction===false){
+        this.state.step=2;
+      }
+      this.renderProgress();this.renderStep();
+    }
+  },
+
+  validateStep(){
+    const s=this.state;
+    if(s.step===1&&s.fractions<1){Toast.error('Deve ter pelo menos 1 fração.');return false}
+    if(s.step===2&&s.monitorsPerFraction===null){Toast.error('Selecione uma opção.');return false}
+    if(s.step===3&&s.totalMonitors<1){Toast.error('Deve ter pelo menos 1 monitor.');return false}
+    if(s.step===3&&s.hasWifi===false&&s.totalMonitors>66){Toast.error('Sem Wi-Fi, o máximo são 66 monitores.');return false}
+    if(s.step===4&&s.hasWifi===null){Toast.error('Selecione uma opção.');return false}
+    if(s.step===5&&!s.selectedPlaca){Toast.error('Selecione uma placa exterior.');return false}
+    if(s.step===8&&!s.selectedMonitor){Toast.error('Selecione um monitor.');return false}
+    return true;
+  },
+
+  getPriceMode(){
+    // Orçamentos usam sempre PVP — o comercial aplica desconto manualmente na proposta final
+    return 'pvp';
+  },
+
+  computeAutoItems(){
+    const s=this.state;const prods=Products.getAll();const pm=this.getPriceMode();
+    const fonte=prods.find(p=>p.ref==='DS-KAW150-4N');
+    const distP=prods.find(p=>p.ref==='DS-KAD7060EY');
+    const distS=prods.find(p=>p.ref==='DS-KAD7060EY-S');
+    const modPat=prods.find(p=>p.ref==='DS-KAD7061EY');
+    const auto=[];
+    const add=(p,qty,lbl='')=>{if(p)auto.push({...p,qty,unitPrice:Products.getPrice(p,pm),subtotal:Products.getPrice(p,pm)*qty,isAutomatic:true,_label:lbl})};
+    if(s.hasWifi){
+      add(fonte,1);add(distP,1);
+      const nP=Math.ceil(s.totalMonitors/4);if(nP>0)add(modPat,nP);
+      if(s.totalMonitors>22){add(fonte,1,'(Expansão)');add(distS,1)}
+    }else{
+      add(fonte,1);add(distP,1);
+    }
+    s.autoItems=auto;
+  },
+
+  buildFinalItems(){
+    const s=this.state;const pm=this.getPriceMode();const prods=Products.getAll();const items=[];
+    if(s.selectedPlaca){const p=prods.find(pr=>pr.ref===s.selectedPlaca.ref)||s.selectedPlaca;items.push({productId:p.id,ref:p.ref,description:p.description,image:p.image,qty:1,unitPrice:Products.getPrice(p,pm),subtotal:Products.getPrice(p,pm),isAutomatic:false})}
+    s.selectedModulos.filter(m=>m.qty>0).forEach(m=>items.push({productId:m.id,ref:m.ref,description:m.description,image:m.image,qty:m.qty,unitPrice:m.unitPrice,subtotal:m.subtotal,isAutomatic:false}));
+    s.autoItems.forEach(a=>items.push({productId:a.id,ref:a.ref,description:a.description+(a._label?' '+a._label:''),image:a.image,qty:a.qty,unitPrice:a.unitPrice,subtotal:a.subtotal,isAutomatic:true}));
+    if(s.selectedMonitor){const p=prods.find(pr=>pr.ref===s.selectedMonitor.ref)||s.selectedMonitor;const qty=s.totalMonitors;const up=Products.getPrice(p,pm);items.push({productId:p.id,ref:p.ref,description:p.description,image:p.image,qty,unitPrice:up,subtotal:up*qty,isAutomatic:false})}
+    return items;
+  },
+
+  renderStep(){
+    const s=this.state;const pm=this.getPriceMode();
+    const effectiveTotal=s.monitorsPerFraction===false?s.totalSteps-1:s.totalSteps;
+    const effectiveStep=s.step>3&&s.monitorsPerFraction===false?s.step-1:s.step;
+    const navBtns=(hidePrev=false)=>`<div class="wizard-nav">
+      ${hidePrev?'<span></span>':`<button class="btn btn-secondary btn-lg" onclick="Wizard.prev()"><i class="fas fa-arrow-left"></i> Anterior</button>`}
+      <span class="wizard-step-counter">Passo ${effectiveStep} de ${effectiveTotal}</span>
+      <button class="btn btn-accent btn-lg" onclick="Wizard.next()">Seguinte <i class="fas fa-arrow-right"></i></button>
+    </div>`;
+
+    let html='';
+    switch(s.step){
+      case 1:
+        html=`<h2 class="wizard-step-title">Quantas frações existem?</h2>
+<p class="wizard-step-desc">Introduza o número total de apartamentos ou unidades independentes no edifício. Cada fração corresponde normalmente a um monitor interior.</p>
+<div class="wizard-number-input">
+  <button class="number-btn" onclick="Wizard.changeNum('fractions',-1)"><i class="fas fa-minus"></i></button>
+  <div class="number-display" id="wFractions">${s.fractions}</div>
+  <button class="number-btn" onclick="Wizard.changeNum('fractions',1)"><i class="fas fa-plus"></i></button>
+</div>
+<div class="alert alert-info" style="margin-top:20px"><i class="fas fa-info-circle"></i><div>Cada fração corresponde normalmente a <strong>1 monitor interior</strong>.</div></div>
+${navBtns(true)}`;break;
+
+      case 2:
+        html=`<h2 class="wizard-step-title">Alguma fração possui mais monitores?</h2>
+<p class="wizard-step-desc">Algumas habitações podem ter mais do que um monitor interior (ex: sala + quarto). Se for o caso, selecione Sim.</p>
+<div class="wizard-choice-grid">
+  <div class="wizard-choice-card ${s.monitorsPerFraction===true?'selected':''}" onclick="Wizard.selectBool('monitorsPerFraction',true)">
+    <i class="fas fa-check-circle"></i><h3>Sim</h3><p>Pelo menos uma fração tem mais do que um monitor interior.</p>
+  </div>
+  <div class="wizard-choice-card ${s.monitorsPerFraction===false?'selected':''}" onclick="Wizard.selectBool('monitorsPerFraction',false)">
+    <i class="fas fa-minus-circle"></i><h3>Não</h3><p>Cada fração tem exatamente um monitor interior.${s.monitorsPerFraction===false?` <strong style="color:var(--success)">Total definido automaticamente: ${s.fractions} monitores.</strong>`:''}</p>
+  </div>
+</div>${navBtns()}`;break;
+
+      case 3:
+        html=`<h2 class="wizard-step-title">Quantos monitores no total?</h2>
+<p class="wizard-step-desc">Indique o número total de monitores interiores que serão instalados.${s.hasWifi===false?' <strong>Máximo: 66 monitores</strong> sem Wi-Fi.':''}</p>
+<div class="wizard-number-input">
+  <button class="number-btn" onclick="Wizard.changeNum('totalMonitors',-1)"><i class="fas fa-minus"></i></button>
+  <div class="number-display" id="wMonitors">${s.totalMonitors}</div>
+  <button class="number-btn" onclick="Wizard.changeNum('totalMonitors',1)"><i class="fas fa-plus"></i></button>
+</div>
+${!s.monitorsPerFraction?`<div class="alert alert-info" style="margin-top:20px"><i class="fas fa-lightbulb"></i><div>Como cada fração tem 1 monitor, o total recomendado é <strong>${s.fractions}</strong>.</div></div>`:''}
+${s.hasWifi&&s.totalMonitors>22?`<div class="alert alert-warning" style="margin-top:12px"><i class="fas fa-triangle-exclamation"></i><div>Com mais de 22 monitores Wi-Fi, será adicionada automaticamente uma <strong>fonte + distribuidor extra</strong>.</div></div>`:''}
+${navBtns()}`;break;
+
+      case 4:
+        html=`<h2 class="wizard-step-title">Os monitores possuem Wi-Fi?</h2>
+<p class="wizard-step-desc">Os monitores com Wi-Fi permitem utilizar a aplicação móvel de forma independente. Esta escolha determina os acessórios automáticos necessários.</p>
+<div class="wizard-choice-grid">
+  <div class="wizard-choice-card ${s.hasWifi===true?'selected':''}" onclick="Wizard.selectBool('hasWifi',true)">
+    <i class="fas fa-wifi"></i><h3>Sim, com Wi-Fi</h3><p>Permite app móvel independente. Requer acessórios adicionais automáticos.</p>
+  </div>
+  <div class="wizard-choice-card ${s.hasWifi===false?'selected':''}" onclick="Wizard.selectBool('hasWifi',false)">
+    <i class="fas fa-ethernet"></i><h3>Não, sem Wi-Fi</h3><p>Monitores standard 2 fios. Suporta até 66 monitores por instalação.</p>
+  </div>
+</div>${navBtns()}`;break;
+
+      case 5:{
+        const placas=Products.getAll().filter(p=>p.category==='placa');
+        html=`<h2 class="wizard-step-title">Escolha da Placa Exterior</h2>
+<p class="wizard-step-desc">Selecione o videoporteiro exterior que será instalado na entrada do edifício.</p>
+<div class="product-select-grid">
+  ${placas.map(p=>`<div class="product-select-card ${s.selectedPlaca?.ref===p.ref?'selected':''}" onclick="Wizard.selectPlaca('${p.ref}')">
+    <img src="${p.image}" alt="${p.ref}" onerror="this.parentElement.innerHTML='<div style=\\'text-align:center;padding:20px;color:var(--text-muted);font-size:.72rem\\'>${p.ref}</div>'">
+    <div class="psc-ref">${p.ref}</div>
+    <div class="psc-name">${p.description.split('.')[0]}</div>
+    ${p.notes?`<div style="font-size:.72rem;color:var(--text-muted);margin-bottom:6px">${p.notes}</div>`:''}
+    <div class="psc-price">${Utils.formatCurrency(Products.getPrice(p,pm))}</div>
+    <div class="psc-selected-badge"><span class="badge badge-accent"><i class="fas fa-check"></i> Selecionado</span></div>
+  </div>`).join('')}
+</div>${navBtns()}`;break;}
+
+      case 6:{
+        const modulos=Products.getAll().filter(p=>p.category==='modulo');
+        html=`<h2 class="wizard-step-title">Módulos Adicionais</h2>
+<p class="wizard-step-desc">Adicione módulos de extensão à placa exterior. Defina a quantidade de cada módulo (0 = não incluir).</p>
+${modulos.map(p=>{const ex=s.selectedModulos.find(m=>m.ref===p.ref);const qty=ex?.qty||0;const sid='m_'+p.id;return`
+<div class="module-qty-card">
+  <img src="${p.image}" alt="${p.ref}" onerror="this.style.display='none'">
+  <div class="module-qty-info">
+    <div class="module-qty-ref">${p.ref}</div>
+    <div class="module-qty-name">${p.description.split('.')[0]}</div>
+    <div class="module-qty-price">${Utils.formatCurrency(Products.getPrice(p,pm))} / un.${p.notes?` · ${p.notes}`:''}</div>
+  </div>
+  <div class="module-qty-controls">
+    <button class="qty-btn" onclick="Wizard.changeModuloQty('${p.ref}','${p.id}',-1)"><i class="fas fa-minus"></i></button>
+    <div class="qty-value" id="${sid}" style="color:${qty>0?'var(--accent)':'var(--text-primary)'}">${qty}</div>
+    <button class="qty-btn" onclick="Wizard.changeModuloQty('${p.ref}','${p.id}',1)"><i class="fas fa-plus"></i></button>
+  </div>
+</div>`}).join('')}
+${navBtns()}`;break;}
+
+      case 7:
+        html=`<h2 class="wizard-step-title">Acessórios Automáticos</h2>
+<p class="wizard-step-desc">Com base nas suas escolhas, os seguintes equipamentos foram calculados e adicionados automaticamente à instalação.</p>
+${s.autoItems.length===0?'<div class="alert alert-info"><i class="fas fa-info-circle"></i><div>Sem acessórios automáticos para esta configuração.</div></div>':''}
+${s.autoItems.map(item=>`<div class="auto-item-row">
+  <img src="${item.image}" alt="${item.ref}" onerror="this.style.display='none'">
+  <div style="flex:1;min-width:0">
+    <div class="module-qty-ref">${item.ref}</div>
+    <div class="module-qty-name">${item.description?.split('.')[0]||item.ref}${item._label?' <em style="color:var(--text-muted)">'+item._label+'</em>':''}</div>
+    <div class="module-qty-price">${item.qty}× · ${Utils.formatCurrency(item.unitPrice)} / un.</div>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;flex-shrink:0">${Utils.formatCurrency(item.subtotal)}</div>
+  <span class="auto-badge">AUTO</span>
+</div>`).join('')}
+${s.autoItems.length>0?`<div class="alert alert-success" style="margin-top:16px"><i class="fas fa-circle-check"></i><div>Total automático: <strong>${Utils.formatCurrency(s.autoItems.reduce((sum,i)=>sum+i.subtotal,0))}</strong></div></div>`:''}
+${navBtns()}`;break;
+
+      case 8:{
+        const allMons=Products.getAll().filter(p=>p.category==='monitor'||p.category==='monitor_wifi');
+        const ordered=s.hasWifi?[...allMons.filter(p=>p.category==='monitor_wifi'),...allMons.filter(p=>p.category==='monitor')]:allMons;
+        html=`<h2 class="wizard-step-title">Escolha dos Monitores</h2>
+<p class="wizard-step-desc">Selecione o modelo de monitor interior. Serão instaladas <strong>${s.totalMonitors} unidades</strong>.${s.hasWifi?' Os modelos Wi-Fi aparecem em primeiro lugar.':''}</p>
+<div class="product-select-grid">
+  ${ordered.map(p=>`<div class="product-select-card ${s.selectedMonitor?.ref===p.ref?'selected':''}" onclick="Wizard.selectMonitor('${p.ref}')">
+    <img src="${p.image}" alt="${p.ref}" onerror="this.parentElement.innerHTML='<div style=\\'text-align:center;padding:20px;color:var(--text-muted);font-size:.72rem\\'>${p.ref}</div>'">
+    <div class="psc-ref">${p.ref}</div>
+    <div class="psc-name">${p.description.split('.')[0]}</div>
+    ${p.notes?`<div style="font-size:.72rem;color:var(--accent);margin-bottom:4px"><i class="fas ${p.category==='monitor_wifi'?'fa-wifi':'fa-headphones'}"></i> ${p.notes}</div>`:''}
+    <div class="psc-price">${Utils.formatCurrency(Products.getPrice(p,pm))} <span style="font-size:.72rem;color:var(--text-muted)">/ un.</span></div>
+    <div class="psc-selected-badge"><span class="badge badge-accent"><i class="fas fa-check"></i> Selecionado</span></div>
+  </div>`).join('')}
+</div>${navBtns()}`;break;}
+
+      case 9:{
+        const allItems=this.buildFinalItems();
+        const sub=allItems.reduce((sum,i)=>sum+i.subtotal,0);
+        const iva=sub*0.23;const total=sub+iva;
+        html=`<h2 class="wizard-step-title">Resumo Final</h2>
+<p class="wizard-step-desc">Verifique todos os itens e preencha os dados do cliente antes de guardar o orçamento.</p>
+<div class="form-row" style="margin-bottom:20px">
+  <div class="form-field"><label>Nome do Cliente *</label><input type="text" id="wClientName" value="${s.clientName}" placeholder="Ex: Condomínio Jardins do Sol" oninput="Wizard.state.clientName=this.value"></div>
+  <div class="form-field"><label>Email do Cliente</label><input type="email" id="wClientEmail" value="${s.clientEmail}" placeholder="cliente@email.pt" oninput="Wizard.state.clientEmail=this.value"></div>
+</div>
+<div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+  <div style="overflow-x:auto">
+    <table class="summary-table">
+      <thead><tr><th style="width:50px">Img</th><th>Referência</th><th>Descrição</th><th style="text-align:center">Qtd</th><th style="text-align:right">P. Unit.</th><th style="text-align:right">Subtotal</th></tr></thead>
+      <tbody>
+        ${allItems.map(item=>`<tr>
+          <td><img src="${item.image}" alt="${item.ref}" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='"></td>
+          <td><span class="col-ref">${item.ref}</span>${item.isAutomatic?' <span class="auto-badge" style="margin-left:4px;font-size:.62rem">AUTO</span>':''}</td>
+          <td style="font-size:.82rem">${item.description?.split('.')[0]||'–'}</td>
+          <td style="text-align:center;font-weight:700">${item.qty}</td>
+          <td style="text-align:right;font-family:'JetBrains Mono',monospace">${Utils.formatCurrency(item.unitPrice)}</td>
+          <td style="font-weight:700;color:var(--text-primary);font-family:'JetBrains Mono',monospace">${Utils.formatCurrency(item.subtotal)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="summary-totals">
+  <div class="summary-totals-row"><span>Subtotal</span><span class="val">${Utils.formatCurrency(sub)}</span></div>
+  <div class="summary-totals-row iva"><span>IVA (23%)</span><span class="val">${Utils.formatCurrency(iva)}</span></div>
+  <div class="summary-totals-row total"><span>TOTAL</span><span class="val" style="color:var(--accent)">${Utils.formatCurrency(total)}</span></div>
+</div>
+<div class="wizard-nav" style="flex-wrap:wrap;gap:10px">
+  <button class="btn btn-secondary btn-lg" onclick="Wizard.prev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+  <span class="wizard-step-counter">Passo ${effectiveStep} de ${effectiveTotal}</span>
+  <div class="flex gap-3" style="flex-wrap:wrap">
+    <button class="btn btn-secondary" onclick="Wizard.printSummary()"><i class="fas fa-print"></i> Imprimir</button>
+    <button class="btn btn-secondary" onclick="Wizard.exportPDF()"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+    <button class="btn btn-accent btn-lg" onclick="Wizard.saveBudget()"><i class="fas fa-save"></i> Guardar Orçamento</button>
+  </div>
+</div>`;break;}
+    }
+    document.getElementById('wizardStepContent').innerHTML=html;
+    document.getElementById('wizard-overlay').scrollTo({top:0,behavior:'smooth'});
+  },
+
+  changeNum(field,delta){
+    const max=field==='totalMonitors'?(this.state.hasWifi===false?66:500):999;
+    this.state[field]=Math.max(1,Math.min(max,(this.state[field]||1)+delta));
+    const elId=field==='fractions'?'wFractions':'wMonitors';
+    const el=document.getElementById(elId);
+    if(el){el.textContent=this.state[field];el.style.transform='scale(1.15)';el.style.transition='transform .15s';setTimeout(()=>el.style.transform='scale(1)',150)}
+  },
+
+  selectBool(field,value){
+    this.state[field]=value;
+    // Auto-fill totalMonitors when no extra monitors per fraction
+    if(field==='monitorsPerFraction'&&value===false){
+      this.state.totalMonitors=this.state.fractions;
+    }
+    document.querySelectorAll('.wizard-choice-card').forEach((card,idx)=>{card.classList.toggle('selected',(idx===0&&value===true)||(idx===1&&value===false))});
+  },
+
+  selectPlaca(ref){
+    this.state.selectedPlaca=Products.getAll().find(p=>p.ref===ref)||null;
+    document.querySelectorAll('.product-select-card').forEach(card=>{card.classList.toggle('selected',card.querySelector('.psc-ref')?.textContent.trim()===ref)});
+  },
+
+  selectMonitor(ref){
+    this.state.selectedMonitor=Products.getAll().find(p=>p.ref===ref)||null;
+    document.querySelectorAll('.product-select-card').forEach(card=>{card.classList.toggle('selected',card.querySelector('.psc-ref')?.textContent.trim()===ref)});
+  },
+
+  changeModuloQty(ref,pid,delta){
+    const prod=Products.getAll().find(p=>p.ref===ref);if(!prod)return;
+    const pm=this.getPriceMode();const sid='m_'+pid;
+    let ex=this.state.selectedModulos.find(m=>m.ref===ref);
+    if(ex){ex.qty=Math.max(0,ex.qty+delta);ex.subtotal=ex.qty*ex.unitPrice}
+    else if(delta>0){this.state.selectedModulos.push({...prod,qty:1,unitPrice:Products.getPrice(prod,pm),subtotal:Products.getPrice(prod,pm)})}
+    const el=document.getElementById(sid);
+    if(el){const cur=this.state.selectedModulos.find(m=>m.ref===ref);const q=cur?cur.qty:0;el.textContent=q;el.style.color=q>0?'var(--accent)':'var(--text-primary)'}
+  },
+
+  saveBudget(){
+    const s=this.state;
+    const clientName=document.getElementById('wClientName')?.value.trim()||s.clientName;
+    if(!clientName){Toast.error('Introduza o nome do cliente.');return}
+    s.clientName=clientName;s.clientEmail=document.getElementById('wClientEmail')?.value.trim()||s.clientEmail;
+    const user=Auth.currentUser;
+    const allItems=this.buildFinalItems();
+    const sub=allItems.reduce((sum,i)=>sum+i.subtotal,0);const iva=sub*0.23;const total=sub+iva;
+    const budget={id:Utils.uuid(),comercialId:user.id,adminId:user.role==='comercial'?user.adminId:user.id,clientName:s.clientName,clientEmail:s.clientEmail,status:'draft',priceMode:'pvp',fractions:s.fractions,monitorsPerFraction:s.monitorsPerFraction,totalMonitors:s.totalMonitors,hasWifi:s.hasWifi,items:allItems,totals:{subtotal:sub,iva,total},createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+    Storage.push('app_budgets',budget);
+    Storage.push('app_activity',{id:Utils.uuid(),userId:user.id,userName:user.name,action:'create_budget',detail:`Criou orçamento para ${s.clientName}`,timestamp:new Date().toISOString(),color:'var(--accent)'});
+    document.getElementById('wizard-overlay').classList.remove('active');
+    Swal.fire({title:'Orçamento Guardado!',html:`<p>Orçamento para <strong>${s.clientName}</strong> guardado.</p><p style="margin-top:8px">Total: <strong>${Utils.formatCurrency(total)}</strong></p>`,icon:'success',confirmButtonText:'Ver Orçamentos',showCancelButton:true,cancelButtonText:'Exportar PDF',confirmButtonColor:'#6366f1',...App.swalOpts()}).then(r=>{
+      if(r.isConfirmed)Pages.myBudgets();
+      else if(r.dismiss===Swal.DismissReason.cancel)Pages.exportBudgetPDF(budget.id);
+    });
+  },
+
+  exportPDF(){
+    const s=this.state;
+    const clientName=document.getElementById('wClientName')?.value.trim()||s.clientName||'Cliente';
+    const allItems=this.buildFinalItems();
+    const sub=allItems.reduce((sum,i)=>sum+i.subtotal,0);const iva=sub*0.23;const total=sub+iva;
+    const pm=this.getPriceMode();
+    const{jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    // Header com logo visual
+    doc.setFillColor(99,102,241);doc.rect(0,0,210,32,'F');
+    doc.setFillColor(79,82,221);doc.rect(0,0,55,32,'F');
+    doc.setFillColor(255,255,255);doc.roundedRect(8,7,18,18,3,3,'F');
+    doc.setFillColor(99,102,241);
+    doc.rect(11,10,5,3,'F');doc.rect(18,10,5,3,'F');
+    doc.rect(11,15,5,3,'F');doc.rect(18,15,5,3,'F');
+    doc.rect(11,20,12,3,'F');
+    doc.setFontSize(14);doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.text('VISIOTECH',30,14);
+    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(200,200,255);doc.text('CALC',30,21);
+    doc.setFontSize(8);doc.text('Sistema de Orçamentos',30,27);
+    doc.setFontSize(11);doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.text('PRÉ-VISUALIZAÇÃO',143,13);
+    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(200,200,255);doc.text(Utils.formatDate(new Date().toISOString()),152,20);
+    doc.setTextColor(15,23,42);doc.setFontSize(11);doc.setFont('helvetica','bold');doc.text('Cliente',15,47);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(clientName,15,54);
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text('Instalação',120,47);doc.setFont('helvetica','normal');doc.setFontSize(9);
+    doc.text(`Frações: ${s.fractions}`,120,54);doc.text(`Monitores: ${s.totalMonitors}`,120,59);doc.text(`Wi-Fi: ${s.hasWifi?'Sim':'Não'}`,120,64);doc.text(`Preços: PVP (desconto a acordar)`,120,69);
+    doc.setDrawColor(230,230,230);doc.line(15,75,195,75);
+    const rows=allItems.map(item=>[item.ref,(item.description?item.description.split('.')[0].substring(0,45):'–'),String(item.qty),Utils.formatCurrency(item.unitPrice),Utils.formatCurrency(item.subtotal)]);
+    doc.autoTable({startY:82,head:[['Referência','Descrição','Qtd','P. Unit.','Subtotal']],body:rows,styles:{fontSize:9,cellPadding:3},headStyles:{fillColor:[99,102,241],textColor:255,fontStyle:'bold'},columnStyles:{0:{cellWidth:36},1:{cellWidth:78},2:{cellWidth:15,halign:'center'},3:{cellWidth:28,halign:'right'},4:{cellWidth:28,halign:'right'}},alternateRowStyles:{fillColor:[248,250,252]}});
+    const fy=doc.lastAutoTable?.finalY||80;
+    doc.setFillColor(248,250,252);doc.rect(120,fy+8,75,36,'F');doc.setDrawColor(230,230,230);doc.rect(120,fy+8,75,36,'S');
+    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);doc.text('Subtotal:',125,fy+18);doc.text('IVA (23%):',125,fy+25);
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(15,23,42);doc.text('TOTAL:',125,fy+36);
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(71,85,105);doc.text(Utils.formatCurrency(sub),190,fy+18,{align:'right'});doc.text(Utils.formatCurrency(iva),190,fy+25,{align:'right'});
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(99,102,241);doc.text(Utils.formatCurrency(total),190,fy+36,{align:'right'});
+    doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(148,163,184);doc.text('Visiotech Calc — Sistema de Orçamentos Profissional',105,287,{align:'center'});doc.text(`Gerado em ${Utils.formatDateTime(new Date().toISOString())}`,105,292,{align:'center'});
+    doc.save(`Orcamento_${clientName.replace(/\s/g,'_')}.pdf`);Toast.success('PDF exportado com sucesso!');
+  },
+
+  printSummary(){
+    const s=this.state;
+    const clientName=document.getElementById('wClientName')?.value.trim()||s.clientName||'Cliente';
+    const allItems=this.buildFinalItems();
+    const sub=allItems.reduce((sum,i)=>sum+i.subtotal,0);const iva=sub*0.23;const total=sub+iva;
+    const win=window.open('','_blank');
+    win.document.write(`<!DOCTYPE html><html lang="pt-PT"><head><meta charset="UTF-8"><title>Orçamento — ${clientName}</title>
+<style>body{font-family:Arial,sans-serif;font-size:12px;color:#333;margin:20px}h1{font-size:20px;color:#6366f1;margin-bottom:4px}.sub{color:#666;font-size:11px;margin-bottom:20px}.ig{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}.ib h3{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}table{width:100%;border-collapse:collapse;margin-bottom:16px}th{background:#6366f1;color:#fff;padding:8px 10px;text-align:left;font-size:11px}td{padding:7px 10px;border-bottom:1px solid #eee;font-size:11px}tr:nth-child(even)td{background:#f8f9fa}.tot{width:240px;margin-left:auto;border:1px solid #eee;border-radius:6px;overflow:hidden}.tr{display:flex;justify-content:space-between;padding:7px 12px;font-size:11px;border-bottom:1px solid #eee}.tt{display:flex;justify-content:space-between;padding:8px 12px;background:#6366f1;color:#fff;font-weight:bold;font-size:13px}.badge{display:inline-block;background:#f0f1ff;color:#6366f1;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:bold}footer{margin-top:30px;border-top:1px solid #eee;padding-top:10px;color:#aaa;font-size:10px;text-align:center}@media print{@page{margin:15mm}}</style></head><body>
+<div style="background:#6366f1;padding:16px 20px;border-radius:8px;margin-bottom:20px;display:flex;align-items:center;gap:16px">
+  <div style="background:#4f52dd;border-radius:6px;padding:10px 14px;display:flex;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center">
+      <svg width="14" height="14" viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="3" rx="1" fill="#6366f1"/><rect x="8" y="1" width="5" height="3" rx="1" fill="#6366f1"/><rect x="1" y="6" width="5" height="3" rx="1" fill="#6366f1"/><rect x="8" y="6" width="5" height="3" rx="1" fill="#6366f1"/><rect x="1" y="11" width="12" height="2" rx="1" fill="#6366f1"/></svg>
+    </div>
+  </div>
+  <div>
+    <div style="color:#fff;font-size:18px;font-weight:700;letter-spacing:-.5px">VISIOTECH <span style="color:#c7d2fe">CALC</span></div>
+    <div style="color:#c7d2fe;font-size:11px">Sistema de Orçamentos Profissional</div>
+  </div>
+  <div style="margin-left:auto;text-align:right">
+    <div style="color:#fff;font-size:10px;opacity:.8">${Utils.formatDateTime(new Date().toISOString())}</div>
+    <div style="color:#c7d2fe;font-size:10px">Preços PVP — desconto a acordar</div>
+  </div>
+</div>
+<div class="ig"><div class="ib"><h3>Cliente</h3><strong>${clientName}</strong></div><div class="ib"><h3>Instalação</h3>Frações: ${s.fractions} | Monitores: ${s.totalMonitors} | Wi-Fi: ${s.hasWifi?'Sim':'Não'}</div></div>
+<table><thead><tr><th>Referência</th><th>Descrição</th><th>Qtd</th><th>Preço Unit.</th><th>Subtotal</th></tr></thead><tbody>
+${allItems.map(item=>`<tr><td><strong>${item.ref}</strong>${item.isAutomatic?' <span class="badge">AUTO</span>':''}</td><td>${item.description?.split('.')[0]||'–'}</td><td style="text-align:center">${item.qty}</td><td style="text-align:right">${Utils.formatCurrency(item.unitPrice)}</td><td style="text-align:right"><strong>${Utils.formatCurrency(item.subtotal)}</strong></td></tr>`).join('')}
+</tbody></table>
+<div class="tot"><div class="tr"><span>Subtotal</span><span>${Utils.formatCurrency(sub)}</span></div><div class="tr"><span>IVA (23%)</span><span>${Utils.formatCurrency(iva)}</span></div><div class="tt"><span>TOTAL</span><span>${Utils.formatCurrency(total)}</span></div></div>
+<footer>Visiotech Calc &mdash; Documento gerado automaticamente. Válido por 30 dias.</footer>
+</body></html>`);
+    win.document.close();setTimeout(()=>win.print(),500);
+  }
+};
+
+/* === INIT === */
+document.addEventListener('DOMContentLoaded',()=>App.init());
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay')&&e.target.id)Pages.closeModal(e.target.id)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.querySelector('.modal-overlay');if(o&&o.id)Pages.closeModal(o.id)}});
+</script>
+</body>
+</html>
